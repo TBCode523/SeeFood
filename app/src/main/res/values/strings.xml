@@ -6,4 +6,19 @@
     <string name="title_activity_auth">AuthActivity</string>
     <string name="register">Register</string>
     <string name="login">Login</string>
+
+
+    <string name="registerWelcomeText">Fill out the form below \n to create an account.</string>
+    <string name="apple_logo">Apple logo</string>
+    <string name="machine_logo">Machine logo</string>
+    <string name="register_username">Username</string>
+    <string name="your_email">Your email</string>
+    <string name="password">Password</string>
+    <string name="create_account_button">Sign up</string>
+    <string name="ConfirmPassword">Confirm Password</string>
+    <string name="loginWelcomeText">Welcome to SeeFood!</string>
+    <string name="nutritional_app">Nutrional App</string>
+    <string name="sign_up_text">New user? Click below to register.</string>
+    <string name="sign_up_button">SIGN UP</string>
+
 </resources>

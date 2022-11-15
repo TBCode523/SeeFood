@@ -1,19 +1,19 @@
 package com.example.seefood.ui.auth.register
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import android.provider.ContactsContract
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.seefood.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.ktx.initialize
+
 
 class RegisterFragment : Fragment() {
 
@@ -37,6 +37,16 @@ class RegisterFragment : Fragment() {
         //Firebase.initialize(requireContext())
         auth = Firebase.auth
         //registerUser("test@email.com", "testing12345")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
     }
 
     private fun registerUser(email: String, password:String){

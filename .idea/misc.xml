@@ -9,6 +9,13 @@
         <entry key="..\:/School/CMSC436/SeeFood/app/src/main/res/layout/fragment_register.xml" value="0.11574074074074074" />
         <entry key="..\:/School/CMSC436/SeeFood/app/src/main/res/menu/bottom_nav_menu.xml" value="0.1" />
         <entry key="..\:/School/CMSC436/SeeFood/app/src/main/res/menu/bottom_nav_menu_auth.xml" value="0.1175925925925926" />
+        <entry key="app/src/main/res/drawable-v24/ic_add_person.xml" value="0.272" />
+        <entry key="app/src/main/res/drawable-v24/ic_email.xml" value="0.272" />
+        <entry key="app/src/main/res/drawable-v24/ic_password.xml" value="0.272" />
+        <entry key="app/src/main/res/drawable-v24/login_background.xml" value="0.272" />
+        <entry key="app/src/main/res/drawable-v24/register_text_background.xml" value="0.272" />
+        <entry key="app/src/main/res/layout/fragment_login.xml" value="0.13044579533941236" />
+        <entry key="app/src/main/res/layout/fragment_register.xml" value="0.1037037037037037" />
       </map>
     </option>
   </component>
