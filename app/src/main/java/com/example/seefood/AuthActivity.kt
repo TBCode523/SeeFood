@@ -11,6 +11,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.seefood.R
 import com.example.seefood.databinding.ActivityAuthBinding
+import com.example.seefood.ui.auth.login.LoginFragment
 import com.example.seefood.ui.auth.register.RegisterFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -24,7 +25,7 @@ class AuthActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.container, RegisterFragment.newInstance())
+                .replace(R.id.container, LoginFragment.newInstance())
                 .commitNow()
         }
         binding = ActivityAuthBinding.inflate(layoutInflater)
