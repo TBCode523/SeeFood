@@ -20,5 +20,6 @@
     <string name="nutritional_app">Nutrional App</string>
     <string name="sign_up_text">New user? Click below to register.</string>
     <string name="sign_up_button">SIGN UP</string>
+    <string name="camera">Camera</string>
 
 </resources>
