@@ -1,4 +1,4 @@
-package com.example.seefood.ui.main.notifications
+package com.example.seefood.ui.main.camera
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -1,4 +1,4 @@
-package com.example.seefood.ui.main.notifications
+package com.example.seefood.ui.main.camera
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
