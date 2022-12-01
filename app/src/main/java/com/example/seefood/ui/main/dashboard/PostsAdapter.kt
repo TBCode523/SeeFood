@@ -1,25 +1,30 @@
 package com.example.seefood.ui.main.dashboard
 
-import android.view.LayoutInflater
-import androidx.recyclerview.widget.RecyclerView
+import android.app.AlertDialog
 import android.content.Context
+import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnClickListener
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.PopupMenu
 import android.widget.TextView
-import androidx.cardview.widget.CardView
-import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import android.widget.Toast
+import androidx.recyclerview.widget.RecyclerView
 import com.example.seefood.R
-import org.w3c.dom.Text
+import kotlin.reflect.KFunction1
 
-class CustomAdapter
-    (private val context: Context,
-     val posts: MutableList<String> ,
-     private val listener: OnItemClickListener
+class CustomAdapter(private val context: Context,
+                    val posts: MutableList<String>,
+                    private val listener: OnItemClickListener,
+                    val buzz: KFunction1<Int, Unit>
 ) :
     RecyclerView.Adapter<CustomAdapter.ViewHolder>(){
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
+        lateinit var name: TextView
+        lateinit var mMen: ImageView
+
+
         fun bind(s: String) {
             itemView.findViewById<TextView>(R.id.itemName).text = s
 
@@ -27,7 +32,53 @@ class CustomAdapter
         val tv: TextView
         init {
             tv = itemView.findViewById(R.id.itemName)
+            mMen = view.findViewById(R.id.mMenus)
+            mMen.setOnClickListener{
+                popupMenus(it)
+            }
+
             itemView.setOnClickListener(this)
+        }
+
+        private fun popupMenus(v:View) {
+            val position = posts[adapterPosition]
+            val popupMenus = PopupMenu(context,v)
+            popupMenus.inflate(R.menu.show_menu)
+            popupMenus.setOnMenuItemClickListener {
+                when(it.itemId){
+                    R.id.delete -> {
+                        AlertDialog.Builder(context)
+                            .setTitle("Delete")
+                            .setIcon(R.drawable.ic_warning)
+                            .setMessage("Are you sure delete this Information")
+                            .setPositiveButton("Yes"){
+                                    dialog,_->
+                                posts.removeAt(adapterPosition)
+                                buzz(adapterPosition)
+
+
+                                notifyDataSetChanged()
+                                Toast.makeText(context,"Deleted this Information",Toast.LENGTH_SHORT).show()
+                                dialog.dismiss()
+                            }
+                            .setNegativeButton("No"){
+                                    dialog,_->
+                                dialog.dismiss()
+                            }
+                            .create()
+                            .show()
+                        true
+                    }
+                    else -> true
+                }
+            }
+            popupMenus.show()
+            val popup = PopupMenu::class.java.getDeclaredField("mPopup")
+            popup.isAccessible = true
+            val menu = popup.get(popupMenus)
+            menu.javaClass.getDeclaredMethod("setForceShowIcon",Boolean::class.java)
+                .invoke(menu,true)
+
         }
 
         // this is the onclick listener that will tell the app what to do when clicked
@@ -43,6 +94,8 @@ class CustomAdapter
             }
         }
     }
+
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)

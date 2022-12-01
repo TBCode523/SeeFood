@@ -5,14 +5,12 @@
         <EditTextPreference
             app:key="preference_name"
             app:title="@string/name_title"
-            app:summary="Change your name"
-            />
+            app:summary="Change your name"/>
 
         <EditTextPreference
             app:key="preference_email"
             app:title="@string/email_title"
-            app:summary="Change your email"
-            />
+            app:summary="Change your email" />
 
         <EditTextPreference
             app:key="preference_password"

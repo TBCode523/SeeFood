@@ -6,9 +6,8 @@
     <string name="title_activity_auth">AuthActivity</string>
     <string name="register">Register</string>
     <string name="login">Login</string>
+
     <string name="manualInput">Input Item Manually</string>
-
-
     <string name="registerWelcomeText">Fill out the form below \n to create an account.</string>
     <string name="apple_logo">Apple logo</string>
     <string name="machine_logo">Machine logo</string>

@@ -8,7 +8,6 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.preference.PreferenceFragmentCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -18,19 +17,17 @@ import com.google.firebase.ktx.Firebase
 private const val TAG = "SettingsActivity"
 class SettingsActivity : AppCompatActivity() {
     private lateinit var builder: AlertDialog.Builder
-    private lateinit var linearLayout: LinearLayoutCompat
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-        linearLayout = findViewById(R.id.nameSetting)
-        linearLayout.setOnClickListener {
-            Toast.makeText(this, "clicked settings", Toast.LENGTH_SHORT).show()
-        }
+
+
 
         if (savedInstanceState == null) {
             supportFragmentManager
                 .beginTransaction()
-                .replace(R.id.settings1, SettingsFragment())
+                .replace(R.id.settings, SettingsFragment())
                 .commit()
         }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
