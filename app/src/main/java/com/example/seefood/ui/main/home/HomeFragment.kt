@@ -24,8 +24,8 @@ class HomeFragment : Fragment() {
     // onDestroyView.
     private val TAG = "HF"
     private val binding get() = _binding!!
-    private lateinit var dbRef: DatabaseReference
-    private lateinit var auth: FirebaseAuth
+    //private lateinit var dbRef: DatabaseReference
+    //private lateinit var auth: FirebaseAuth
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -33,9 +33,9 @@ class HomeFragment : Fragment() {
     ): View {
         val homeViewModel =
             ViewModelProvider(this)[HomeViewModel::class.java]
-        dbRef = FirebaseDatabase.getInstance().reference.child("Users")
-        auth = Firebase.auth
-        val user = auth.currentUser!!
+        //dbRef = FirebaseDatabase.getInstance().reference.child("Users")
+        //auth = Firebase.auth
+        //val user = auth.currentUser!!
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
@@ -43,11 +43,7 @@ class HomeFragment : Fragment() {
         homeViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
-        dbRef.child(user.uid).get().addOnSuccessListener {
-                Log.i(TAG, "DataSnapShot Value: ${it.value}")
-                val nickname = it.child("nickname").value.toString()
-                textView.text = SpannableStringBuilder("Welcome $nickname")
-            }
+
         return root
     }
 
