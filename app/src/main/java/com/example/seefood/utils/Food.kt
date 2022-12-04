@@ -1,7 +1,6 @@
 package com.example.seefood.utils
 
 import android.graphics.Bitmap
-import android.os.Bundle
 
 data class Food(val name:String, val ServingSize:String, val calo:String,
                 val tfat:String, val choleserol:String, val sod:String,
@@ -23,3 +22,6 @@ data class Food(val name:String, val ServingSize:String, val calo:String,
         this.image = im;
     }
 }
+/*
+data class Food(val name:String,val pic: Bitmap, val nutrients:HashMap<String, Float>)
+*/
