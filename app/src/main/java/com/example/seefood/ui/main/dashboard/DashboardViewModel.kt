@@ -4,13 +4,21 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.seefood.utils.Food
 
 class DashboardViewModel : ViewModel() {
 
-    private val _text = MutableLiveData<MutableList<String>>().apply {
+    private val _text = MutableLiveData<MutableList<Food>>().apply {
         value = mutableListOf()
     }
-    val text: LiveData<MutableList<String>> = _text
+    val text: LiveData<MutableList<Food>> = _text
+
+    private val a = MutableLiveData<MutableList<String>>().apply {
+        value = mutableListOf()
+    }
+    val _a: LiveData<MutableList<String>> = a
+
+
 
     fun delete(delPos: Int){
         if (_text.value!!.size >=1){
@@ -23,9 +31,9 @@ class DashboardViewModel : ViewModel() {
     }
 
 
-    fun click(newItem: String){
-        Log.i("in click", newItem)
+    fun click(newItem: Food){
         //this will need to change to be access firebase
         _text.value!!.add(newItem)
+
     }
 }

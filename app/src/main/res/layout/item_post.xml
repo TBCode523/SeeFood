@@ -31,11 +31,6 @@
                 android:text="Placeholder"
                 android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="275dp"
-                android:layout_height="wrap_content"
-                android:text="Description" />
         </LinearLayout>
         <ImageView
             android:id="@+id/mMenus"
