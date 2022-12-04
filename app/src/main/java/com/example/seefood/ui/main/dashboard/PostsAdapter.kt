@@ -11,10 +11,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seefood.R
+import com.example.seefood.utils.Food
 import kotlin.reflect.KFunction1
 
 class CustomAdapter(private val context: Context,
-                    val posts: MutableList<String>,
+                    val posts: MutableList<Food>,
                     private val listener: OnItemClickListener,
                     val buzz: KFunction1<Int, Unit>
 ) :
@@ -42,6 +43,9 @@ class CustomAdapter(private val context: Context,
 
         private fun popupMenus(v:View) {
             val position = posts[adapterPosition]
+
+
+
             val popupMenus = PopupMenu(context,v)
             popupMenus.inflate(R.menu.show_menu)
             popupMenus.setOnMenuItemClickListener {
@@ -105,7 +109,7 @@ class CustomAdapter(private val context: Context,
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(posts[position])
+        holder.bind(posts[position].foodName)
     }
 
     override fun getItemCount()= posts.size
