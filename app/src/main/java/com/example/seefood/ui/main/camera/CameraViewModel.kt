@@ -3,6 +3,7 @@ package com.example.seefood.ui.main.camera
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.mlkit.vision.text.Text
 
 class CameraViewModel : ViewModel() {
 
@@ -11,22 +12,24 @@ class CameraViewModel : ViewModel() {
     }
     val text: LiveData<String> = _text
 
-    private fun parseText(visionText: Text): HashMap<String, Float>{
+    fun parseText(visionText: Text): HashMap<String, Float>{
         val hashMap =  hashMapOf<String, Float>()
 //        All the pattern matching needed to extract all the necessary dietary info
-        val fatPattern = Regex("Total Fat (\\d+)n?m?g?9?").find(visionText.text)
-        val sodiumPattern = Regex("Sodium (\\d+)n?m?g?9?").find(visionText.text)
-        val carbsPattern = Regex("Total Carbohydrate (\\d+)n?m?g?9?").find(visionText.text)
-        val sugarPattern = Regex("Total Sugars (\\d+)n?m?g?9?").find(visionText.text)
-        val proteinPattern = Regex("Protein (\\d+)n?m?g?9?").find(visionText.text)
-        val potassiumPattern = Regex("Potassium (\\d+)n?m?g?9?").find(visionText.text)
-        val vitaminPattern = Regex("Vitamin [A-Z] (\\d+)n?m?g?9?").find(visionText.text)
+        val fatPattern = Regex("Total Fat (\\d+|O)n?m?g?9?").find(visionText.text)
+        val sodiumPattern = Regex("Sodium (\\d+|O)n?m?g?9?").find(visionText.text)
+        val carbsPattern = Regex("Total Carbohydrate (\\d+|O)n?m?g?9?").find(visionText.text)
+        val sugarPattern = Regex("Total Sugars (\\d+|O)n?m?g?9?").find(visionText.text)
+        val proteinPattern = Regex("Protein (\\d+|O)n?m?g?9?").find(visionText.text)
+        val potassiumPattern = Regex("Potassium|Potasium (\\d+|O)n?m?g?9?").find(visionText.text)
+        val vitaminPattern = Regex("Vitamin [A-Z] (\\d+|O)n?m?g?9?").find(visionText.text)
         val servingSizePattern = Regex("Serving size (\\d+(\\.\\d+)?) .*").find(visionText.text)
 //        Extract information and add it to hashMap
         if(fatPattern != null){
             var (amount,) = fatPattern.destructured
             if(amount.endsWith("9")){
                 amount = amount.dropLast(1)
+            } else if(amount == "O" || amount == ""){
+                amount = "0"
             }
             println("Amount: $amount")
             hashMap["Total Fat"] = amount.toFloat()
@@ -38,6 +41,8 @@ class CameraViewModel : ViewModel() {
             var (amount,) = sodiumPattern.destructured
             if(amount.endsWith("9")){
                 amount = amount.dropLast(1)
+            } else if(amount == "O" || amount == ""){
+                amount = "0"
             }
             println("Amount: $amount")
             hashMap["Sodium"] = amount.toFloat()
@@ -49,6 +54,8 @@ class CameraViewModel : ViewModel() {
             var (amount,) = carbsPattern.destructured
             if(amount.endsWith("9")){
                 amount = amount.dropLast(1)
+            } else if(amount == "O" || amount == ""){
+                amount = "0"
             }
             println("Amount: $amount")
             hashMap["Total Carbohydrates"] = amount.toFloat()
@@ -60,6 +67,8 @@ class CameraViewModel : ViewModel() {
             var (amount,) = sugarPattern.destructured
             if(amount.endsWith("9")){
                 amount = amount.dropLast(1)
+            } else if(amount == "O" || amount == ""){
+                amount = "0"
             }
             println("Amount: $amount")
             hashMap["Total Sugars"] = amount.toFloat()
@@ -71,6 +80,8 @@ class CameraViewModel : ViewModel() {
             var (amount,) = proteinPattern.destructured
             if(amount.endsWith("9")){
                 amount = amount.dropLast(1)
+            } else if(amount == "O" || amount == ""){
+                amount = "0"
             }
             println("Amount: $amount")
             hashMap["Proteins"] = amount.toFloat()
@@ -82,6 +93,8 @@ class CameraViewModel : ViewModel() {
             var (amount,) = potassiumPattern.destructured
             if(amount.endsWith("9")){
                 amount = amount.dropLast(1)
+            } else if(amount == "O" || amount == ""){
+                amount = "0"
             }
             println("Amount: $amount")
             hashMap["Potassium"] = amount.toFloat()
@@ -93,6 +106,8 @@ class CameraViewModel : ViewModel() {
             var (amount,) = vitaminPattern.destructured
             if(amount.endsWith("9")){
                 amount = amount.dropLast(1)
+            } else if(amount == "O" || amount == ""){
+                amount = "0"
             }
             println("Amount: $amount")
             hashMap["Vitamin"] = amount.toFloat()
@@ -102,6 +117,9 @@ class CameraViewModel : ViewModel() {
 
         if(servingSizePattern != null){
             var (amount,_) = servingSizePattern.destructured
+            if(amount == ""){
+               amount = "1"
+            }
             println("Amount: $amount")
             hashMap["Serving Size"] = amount.toFloat()
         } else {
