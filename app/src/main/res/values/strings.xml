@@ -17,7 +17,7 @@
     <string name="create_account_button">Sign up</string>
     <string name="ConfirmPassword">Confirm Password</string>
     <string name="loginWelcomeText">Welcome to SeeFood!</string>
-    <string name="nutritional_app">Nutrional App</string>
+    <string name="nutritional_app">Nutritional App</string>
     <string name="sign_up_text">New user? Click below to register.</string>
     <string name="sign_up_button">SIGN UP</string>
     <string name="title_activity_settings">Settings</string>
@@ -44,6 +44,9 @@
     <string name="settings_delete_account_title">Delete Account</string>
     <string name="camera">Camera</string>
     <string name="title_camera">Camera</string>
+    <string name="settings_change_password">UPDATE PASSWORD</string>
+    <string name="settings_change_email">UPDATE EMAIL</string>
+    <string name="settings_change_name">UPDATE NAME</string>
 
 
 </resources>
