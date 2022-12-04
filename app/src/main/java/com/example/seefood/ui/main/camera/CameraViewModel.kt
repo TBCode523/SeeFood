@@ -1,8 +1,10 @@
 package com.example.seefood.ui.main.camera
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+
 
 class CameraViewModel : ViewModel() {
 
@@ -10,4 +12,5 @@ class CameraViewModel : ViewModel() {
         value = "This is camera Fragment"
     }
     val text: LiveData<String> = _text
+
 }
