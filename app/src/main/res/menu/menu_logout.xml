@@ -2,12 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     >
 
-    <item
-        android:id="@+id/logout_btn"
-        android:icon="@drawable/ic_logout"
-        android:title="@string/settings_logout_btn_title"
-
-        />
 
     <item
         android:id="@+id/delete_user_btn"
