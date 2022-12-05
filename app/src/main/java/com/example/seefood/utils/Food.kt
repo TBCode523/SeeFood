@@ -1,7 +1,5 @@
 package com.example.seefood.utils
 
-import java.io.ByteArrayOutputStream
-
 /*data class Food(val name:String, val ServingSize:String, val calo:String,
                 val tfat:String, val choleserol:String, val sod:String,
                 val car:String, val dFib: String, val sug: String, val prot: String
@@ -26,5 +24,16 @@ import java.io.ByteArrayOutputStream
 data class Food(val name:String, val nutrients:HashMap<String, Float>){
     override fun toString(): String {
         return "name:$name\nnutrients: $nutrients\n"
+    }
+    fun Food() {}
+
+
+
+    @JvmName("getName1")
+    fun getName():String{
+        return name;
+    }
+    fun getHM():HashMap<String, Float>{
+        return nutrients
     }
 }

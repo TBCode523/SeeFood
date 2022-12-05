@@ -5,7 +5,6 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
@@ -13,12 +12,12 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seefood.R
 import com.example.seefood.utils.Food
-import kotlin.reflect.KFunction1
+import kotlin.reflect.KFunction2
 
 class CustomAdapter(private val context: Context,
                     val posts: MutableList<Food>,
                     private val listener: OnItemClickListener,
-                    val buzz: KFunction1<Int, Unit>
+                    val buzz: KFunction2<Int, String, Unit>,
 ) :
     RecyclerView.Adapter<CustomAdapter.ViewHolder>(){
 
@@ -58,10 +57,9 @@ class CustomAdapter(private val context: Context,
                             .setMessage("Are you sure delete this Information")
                             .setPositiveButton("Yes"){
                                     dialog,_->
-                                posts.removeAt(adapterPosition)
-                                buzz(adapterPosition)
 
 
+                                buzz(adapterPosition,posts[adapterPosition].getName())
                                 notifyDataSetChanged()
                                 Toast.makeText(context,"Deleted this Information",Toast.LENGTH_SHORT).show()
                                 dialog.dismiss()

@@ -18,6 +18,11 @@ import com.example.seefood.DetailActivity
 import com.example.seefood.R
 import com.example.seefood.databinding.FragmentDashboardBinding
 import com.example.seefood.utils.Food
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.*
+import com.google.firebase.ktx.Firebase
+
 
 private  const val TAG = "dashAct"
 class DashboardFragment : Fragment(),CustomAdapter.OnItemClickListener {
@@ -25,15 +30,13 @@ class DashboardFragment : Fragment(),CustomAdapter.OnItemClickListener {
     private  var _binding: FragmentDashboardBinding? = null
     private lateinit var adapter: CustomAdapter
     var counter = 0
-
-
-
-
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
     private lateinit var dashboardViewModel: DashboardViewModel
     var item: MutableList<Food> = mutableListOf()
+    private lateinit var auth: FirebaseAuth
+    private lateinit var dbRef: DatabaseReference
 
 
     override fun onCreateView(
@@ -41,26 +44,73 @@ class DashboardFragment : Fragment(),CustomAdapter.OnItemClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        var foodLst = ArrayList<Food>()
+        auth = Firebase.auth
+        //Reference to a list of Food data objects
+        dbRef = FirebaseDatabase.getInstance().reference.child("Users").child(auth.uid!!).child("foods")
+
+
+
+
         dashboardViewModel =
             ViewModelProvider(this).get(DashboardViewModel::class.java)
 
-
-
+        Log.d("Food Nut", "foodLst not null: $foodLst")
         _binding = FragmentDashboardBinding.inflate(inflater, container, false)
         val root: View = _binding!!.root
-
         dashboardViewModel.text.observe(viewLifecycleOwner) {
             item.addAll(it)
         }
-
-
-
-
         Log.i(TAG, item.toString())
+
+
         val recyclerview: RecyclerView = binding.recyclerview
         adapter = CustomAdapter(requireContext(),item,this,::fdelete)
         recyclerview.adapter = adapter
         recyclerview.layoutManager = LinearLayoutManager(requireContext())
+
+        dbRef.addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()){
+                    item.clear()
+                    for (userSnapshot in snapshot.children){
+
+
+
+                        var foodhm = userSnapshot.child("nutrients").value as java.util.HashMap<*, *>
+                        var foodnm = userSnapshot.child("name").value
+
+                        Log.i("retrieve data", foodnm.toString())
+                        Log.i("retrieve data", foodhm.toString())
+
+                        var hm = HashMap<String, Float>()
+                        for ((key,value)in foodhm){
+                            hm.put(key.toString(),value.toString().toFloat())
+                        }
+                        var temp = Food(foodnm.toString(),hm)
+                        var flag = true
+                        for (valu in item){
+                            if (valu.getHM().equals(hm) && valu.getName().equals(foodnm.toString())){
+                                flag = false
+                            }
+                        }
+                        Log.i("retrieve item", item.toString())
+                        if (flag) {
+                            item.add(temp);
+                        }
+                    }
+                    adapter.notifyDataSetChanged()
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+
+
+
 
         binding.fab.setOnClickListener{
             addItemtoRec()
@@ -72,17 +122,34 @@ class DashboardFragment : Fragment(),CustomAdapter.OnItemClickListener {
 
 
     private fun addItem(itm: Food) {
-        dashboardViewModel.click(itm)
+        //dashboardViewModel.click(itm)
         item.add(itm)
 
-        adapter.notifyItemInserted(item.size - 1);
+        adapter.notifyDataSetChanged()
+        dbRef.get()
 
     }
 
-    fun fdelete(itm: Int){
-        dashboardViewModel.delete(itm)
+    fun fdelete(itm: Int,id:String){
+        //dashboardViewModel.delete(itm)
 
-        adapter.notifyDataSetChanged()
+        val dbr = FirebaseDatabase.getInstance().reference.child("Users").child(auth.uid!!).child("foods")
+        dbr.orderByChild("name").equalTo(id).addListenerForSingleValueEvent(object:ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (data in snapshot.children){
+                    data.ref.removeValue()
+                    adapter.notifyDataSetChanged()
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+
+        })
+
+
 
     }
 
@@ -107,53 +174,84 @@ class DashboardFragment : Fragment(),CustomAdapter.OnItemClickListener {
         addDialog.setView(v)
         addDialog.setPositiveButton("Ok"){
                 dialog,_->
+            var hm: HashMap<String, Float> = HashMap<String, Float>();
             if (addName.text.isEmpty()) {
                 Toast.makeText(requireContext(), "please add string for name", Toast.LENGTH_SHORT)
                     .show()
                 dialog.dismiss()
-            }else if(addServingSize.text.isEmpty()){
-                Toast.makeText(requireContext(), "please add string for serving size", Toast.LENGTH_SHORT)
-                    .show()
-                dialog.dismiss()
-            }else if(addCalories.text.isEmpty()||!(addCalories.text.isDigitsOnly())) {
-                Toast.makeText(requireContext(),"make sure you input digits for calories",Toast.LENGTH_SHORT).show()
-                dialog.dismiss()
-            }else if(addCalories.text.isEmpty()||!(addTotalFat.text.isDigitsOnly())) {
-                Toast.makeText(requireContext(),"make sure you input digits for total fat",Toast.LENGTH_SHORT).show()
-                dialog.dismiss()
-            }else if(addCholesterol.text.isEmpty()||!(addCholesterol.text.isDigitsOnly())) {
-                Toast.makeText(requireContext(),"make sure you input digits for cholesterol",Toast.LENGTH_SHORT).show()
-                dialog.dismiss()
-            }else if(addSodium.text.isEmpty()||!(addSodium.text.isDigitsOnly())) {
-                Toast.makeText(requireContext(),"make sure you input digits for sodium",Toast.LENGTH_SHORT).show()
-                dialog.dismiss()
-            } else if(addCarbs.text.isEmpty()||!(addCarbs.text.isDigitsOnly())) {
-                Toast.makeText(requireContext(),"make sure you input digits for carbs",Toast.LENGTH_SHORT).show()
-                dialog.dismiss()
-            } else if(addDietaryFiber.text.isEmpty()||!(addDietaryFiber.text.isDigitsOnly())) {
-                Toast.makeText(requireContext(),"make sure you input digits for dietary fiber",Toast.LENGTH_SHORT).show()
-                dialog.dismiss()
-            } else if(addSugar.text.isEmpty()||!(addSugar.text.isDigitsOnly())) {
-                Toast.makeText(requireContext(),"make sure you input digits for sugars",Toast.LENGTH_SHORT).show()
-                dialog.dismiss()
-            } else if(addProtein.text.isEmpty()||!(addProtein.text.isDigitsOnly())) {
-                Toast.makeText(requireContext(),"make sure you input digits for protein",Toast.LENGTH_SHORT).show()
-                dialog.dismiss()
-            }else {
+            }
 
+            if(addServingSize.text.isEmpty()|| !addServingSize.text.isDigitsOnly()) {
+                hm.set("Serving Size",0F);
+            }else if (addCalories.text.isDigitsOnly()){
+                hm.set("Serving Size",addCalories.text.toString().toFloat());
+            }
+
+
+            if(addCalories.text.isEmpty()|| !addCalories.text.isDigitsOnly()) {
+                hm.set("Calories",0F);
+            }else if (addCalories.text.isDigitsOnly()){
+                hm.set("Calories",addCalories.text.toString().toFloat());
+            }
+
+            if(addTotalFat.text.isEmpty()||!(addTotalFat.text.isDigitsOnly())) {
+                hm.set("Total Fat",0F);
+            }else{
+                hm.set("Total Fat",addTotalFat.text.toString().toFloat());
+            }
+
+            if(addCholesterol.text.isEmpty()||!(addCholesterol.text.isDigitsOnly())) {
+                hm.set("Cholesterol",0F);
+            }else{
+                hm.set("Cholesterol",addCholesterol.text.toString().toFloat());
+            }
+
+            if(addSodium.text.isEmpty()||!(addSodium.text.isDigitsOnly())) {
+                hm.set("Sodium",0F);
+            }else{
+                hm.set("Sodium",addSodium.text.toString().toFloat());
+            }
+
+            if(addCarbs.text.isEmpty()||!(addCarbs.text.isDigitsOnly())) {
+                hm.set("Total Carbohydrates",0F);
+            }else{
+                hm.set("Total Carbohydrates",addCarbs.text.toString().toFloat());
+            }
+
+            if(addDietaryFiber.text.isEmpty()||!(addDietaryFiber.text.isDigitsOnly())) {
+                hm.set("Dietary Fibers",0F);
+            }else{
+                hm.set("Dietary Fibers",addDietaryFiber.text.toString().toFloat());
+            }
+
+            if(addSugar.text.isEmpty()||!(addSugar.text.isDigitsOnly())) {
+                hm.set("Total Sugar",0F);
+            }else{
+                hm.set("Total Sugar",addSugar.text.toString().toFloat())
+            }
+            if(addProtein.text.isEmpty()||!(addProtein.text.isDigitsOnly())) {
+                hm.set("Protein",0F);
+            }else{
+                hm.set("Protein",addProtein.text.toString().toFloat())
+            }
+
+            //*
                 val newFood = Food(
                     addName.text.toString(),
-                    addServingSize.text.toString(),
-                    addCalories.text.toString(),
-                    addTotalFat.text.toString(),
-                    addCholesterol.text.toString(),
-                    addSodium.text.toString(),
-                    addCarbs.text.toString(),
-                    addDietaryFiber.text.toString(),
-                    addSugar.text.toString(),
-                    addProtein.text.toString()
+                    hm
                 );
-
+            var foodLst = ArrayList<Food>()
+            dbRef.get().addOnCompleteListener { it ->
+                Log.d("Saving", "Data: ${it.result.value}")
+                Log.d("Saving", "Children count: ${it.result.childrenCount}")
+                if (it.result.value != null){
+                    foodLst = it.result.value as ArrayList<Food>
+                    Log.d("Saving", "foodLst not null: $foodLst")
+                }
+                foodLst.add(newFood)
+                Log.d("Saving", "New foodLst: $foodLst")
+                dbRef.setValue(foodLst)
+            }
                 addItem(newFood)
                 // add other things that will be saved
                 adapter.notifyItemInserted(item.size - 1);
@@ -163,10 +261,7 @@ class DashboardFragment : Fragment(),CustomAdapter.OnItemClickListener {
                     Toast.LENGTH_SHORT
                 ).show()
                 dialog.dismiss()
-            }
-
-
-
+                //*/
         }
         addDialog.setNegativeButton("Cancel"){
                 dialog,_->
@@ -181,23 +276,26 @@ class DashboardFragment : Fragment(),CustomAdapter.OnItemClickListener {
     override fun onItemClick(position: Int) {
         val clickedItem = item[position]
         Toast.makeText(requireContext(), "item $clickedItem clicked", Toast.LENGTH_SHORT).show()
-
+        //*
         val intent = Intent(getActivity(), DetailActivity::class.java)
-        intent.putExtra("name",clickedItem.foodName);
-        intent.putExtra("ssize",clickedItem.ServingSize)
-        intent.putExtra("calories",clickedItem.cal.toString());
-        intent.putExtra("totalfat",clickedItem.totalfat.toString());
-        intent.putExtra("cholesterol",clickedItem.cholesterol.toString());
-        intent.putExtra("sodium",clickedItem.sodium.toString());
-        intent.putExtra("carbs",clickedItem.carbs.toString());
-        intent.putExtra("dfiber",clickedItem.dFiber.toString());
-        intent.putExtra("sugar",clickedItem.sugar.toString());
-        intent.putExtra("protein",clickedItem.protein.toString());
+        intent.putExtra("name",clickedItem.getName());
+        val hm = clickedItem.getHM();
+        intent.putExtra("ssize",hm.get("Serving Size").toString())
+        intent.putExtra("calories",hm.get("Calories").toString());
+        intent.putExtra("totalfat",hm.get("Total Fat").toString());
+        intent.putExtra("cholesterol",hm.get("Cholesterol").toString());
+        intent.putExtra("sodium",hm.get("Sodium").toString());
+        intent.putExtra("carbs",hm.get("Total Carbohydrates").toString());
+        intent.putExtra("dfiber",hm.get("Dietary Fibers").toString());
+        intent.putExtra("sugar",hm.get("Total Sugar").toString());
+        intent.putExtra("protein",hm.get("Protein").toString());
 
         startActivity(intent)
         // this is the onclick listener for each card in the recycler view,
         // we will need to go to whatever activity or fragment will be used to display the data
         // with the firebase information
+
+         //*/
     }
 
 

@@ -63,36 +63,36 @@ class DetailActivity : AppCompatActivity() {
 
         val pcal: ProgressBar = findViewById(R.id.progressBarCalories)
         pcal.max = caloriesRecommded
-        pcal.progress = calories!!.toInt()
+        pcal.progress = calories!!.toFloat().toInt()
 
         val pfat: ProgressBar = findViewById(R.id.fatprogress)
         pfat.max = totalFatRecommended
-        pfat.progress = totalFat!!.toInt()
+        pfat.progress = totalFat!!.toFloat().toInt()
 
         val pchol: ProgressBar = findViewById(R.id.cholesterolprogress)
         pchol.max = cholesterolRecomended
-        pchol.progress = cholesterol!!.toInt()
+        pchol.progress = cholesterol!!.toFloat().toInt()
 
         val psod: ProgressBar = findViewById(R.id.sodiumprogress)
         psod.max = sodiumRecomended
-        psod.progress = sodium!!.toInt()
+        psod.progress = sodium!!.toFloat().toInt()
 
         val pcarbs: ProgressBar = findViewById(R.id.carbsprogress)
         pcarbs.max = carbsRecomended
-        pcarbs.progress = carbohydrates!!.toInt()
+        pcarbs.progress = carbohydrates!!.toFloat().toInt()
 
         val pdf: ProgressBar = findViewById(R.id.dfibprogress)
         pdf.max = dfibersRecomended
-        pdf.progress = diefibers!!.toInt()
+        pdf.progress = diefibers!!.toFloat().toInt()
 
 
         val sugp: ProgressBar = findViewById(R.id.sugarprogress)
         sugp.max = addSugarsRec
-        sugp.progress = suger!!.toInt()
+        sugp.progress = suger!!.toFloat().toInt()
 
         val pprot: ProgressBar = findViewById(R.id.proteinprogress)
         pprot.max = proteinRecomende
-        pprot.progress = protein!!.toInt()
+        pprot.progress = protein!!.toFloat().toInt()
 
 
 
