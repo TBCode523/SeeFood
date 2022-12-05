@@ -10,6 +10,9 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.seefood.databinding.FragmentHomeBinding
+import com.example.seefood.utils.Food
+import com.example.seefood.utils.GRAPH_GENERATOR
+import com.github.mikephil.charting.charts.PieChart
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
@@ -25,27 +28,41 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var auth: FirebaseAuth
     private lateinit var dbRef: DatabaseReference
+    private lateinit var sumNutrients: HashMap<String,Float>
+    private lateinit var avgNutrients: HashMap<String,Float>
+    private lateinit var pieChart: PieChart
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         auth = Firebase.auth
-        dbRef = FirebaseDatabase.getInstance().reference.child("Users").child(auth.uid!!)
+        dbRef = FirebaseDatabase.getInstance().reference.child("Users").child(auth.uid!!).child("foods")
         val homeViewModel =
             ViewModelProvider(this)[HomeViewModel::class.java]
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        pieChart = binding.pieChart
 
         val textView: TextView = binding.textHome
         homeViewModel.text.observe(viewLifecycleOwner) {
             //textView.text = it
         }
 
-        val displayName = auth.currentUser!!.displayName
+        val displayName = auth.currentUser?.displayName
         Log.d("HF", "displayName: $displayName")
         textView.text = SpannableStringBuilder("Welcome $displayName")
+        dbRef.get().addOnCompleteListener {
+            if(it.result.value != null){
+                val foodLst = it.result.value as List<Food>
+                /*sumNutrients = homeViewModel.getSum(foodLst)
+                avgNutrients = homeViewModel.getAverages(sumNutrients, foodLst.size)
+                GRAPH_GENERATOR.generatePieGraph(pieChart, avgNutrients)
+
+                 */
+            }
+        }
         return root
     }
 
@@ -53,4 +70,5 @@ class HomeFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
 }

@@ -11,9 +11,9 @@ import com.github.mikephil.charting.utils.ColorTemplate
 
 object GRAPH_GENERATOR {
     const val label = "Ratio of nutrients"
-    private fun generatePieGraph(pieChart: PieChart, food: Food){
+    fun generatePieGraph(pieChart: PieChart, nutrients: HashMap<String,Float>){
         chartSetup(pieChart)
-        addEntries(pieChart, food)
+        addEntries(pieChart, nutrients)
 
     }
     private fun chartSetup(pieChart:PieChart) {
@@ -33,12 +33,12 @@ object GRAPH_GENERATOR {
         legend.setDrawInside(false)
     }
 
-    private fun addEntries(pieChart:PieChart, food: Food){
+    private fun addEntries(pieChart:PieChart, nutrients: HashMap<String,Float>){
         val entries = arrayListOf<PieEntry>()
         val colors = arrayListOf<Int>()
-        /*for (k in food.nutrients.keys){
-            entries.add(PieEntry(food.nutrients[k]!!, k))
-        }*/
+        for (k in nutrients.keys){
+            entries.add(PieEntry(nutrients[k]!!, k))
+        }
         for (c in ColorTemplate.MATERIAL_COLORS){
             colors.add(c)
         }
