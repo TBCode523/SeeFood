@@ -24,8 +24,6 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.ktx.storage
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.Text
 import com.google.mlkit.vision.text.TextRecognition
@@ -46,7 +44,6 @@ class CameraFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var dbRef: DatabaseReference
     //Added the following instance variables
-    private lateinit var storage: FirebaseStorage
     private lateinit var imageView: ImageView
     private lateinit var currentPhotoPath: String
     private lateinit var photoFile: File
@@ -79,7 +76,6 @@ class CameraFragment : Fragment() {
         auth = Firebase.auth
         //Reference to a list of Food data objects
         dbRef = FirebaseDatabase.getInstance().reference.child("Users").child(auth.uid!!).child("foods")
-        storage = Firebase.storage
         Log.d("CF", "User: ${auth.currentUser?.email} ${auth.uid}")
     }
 

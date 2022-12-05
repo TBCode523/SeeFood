@@ -1,6 +1,8 @@
 package com.example.seefood.ui.main.home
 
 import android.os.Bundle
+import android.text.SpannableStringBuilder
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +12,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.seefood.databinding.FragmentHomeBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
 
 class HomeFragment : Fragment() {
@@ -20,11 +24,14 @@ class HomeFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
     private lateinit var auth: FirebaseAuth
+    private lateinit var dbRef: DatabaseReference
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        auth = Firebase.auth
+        dbRef = FirebaseDatabase.getInstance().reference.child("Users").child(auth.uid!!)
         val homeViewModel =
             ViewModelProvider(this)[HomeViewModel::class.java]
 
@@ -33,15 +40,15 @@ class HomeFragment : Fragment() {
 
         val textView: TextView = binding.textHome
         homeViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+            //textView.text = it
         }
+
+        val displayName = auth.currentUser!!.displayName
+        Log.d("HF", "displayName: $displayName")
+        textView.text = SpannableStringBuilder("Welcome $displayName")
         return root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        auth = Firebase.auth
-    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

@@ -29,6 +29,7 @@ import com.google.firebase.ktx.Firebase
 import android.content.DialogInterface
 import android.content.Intent
 import com.example.seefood.MainActivity
+import com.google.firebase.auth.ktx.userProfileChangeRequest
 
 
 class RegisterFragment : Fragment() {
@@ -143,7 +144,10 @@ class RegisterFragment : Fragment() {
                     val user = auth.currentUser
                     val emptyLst = ArrayList<Food>()
                     val newData = User(userTxt.text.toString(),emptyLst)
-                    dbRef.child(user!!.uid).setValue(newData)
+                    userProfileChangeRequest {
+                        displayName = userTxt.text.toString()
+                    }
+                    dbRef.child("User").child(auth.uid!!).setValue(newData)
                     registrationDialog()
 
                 } else {
