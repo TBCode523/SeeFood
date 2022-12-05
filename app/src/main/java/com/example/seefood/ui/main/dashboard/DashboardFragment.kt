@@ -22,6 +22,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
+import java.io.Serializable
 
 
 private  const val TAG = "dashAct"
@@ -278,17 +279,10 @@ class DashboardFragment : Fragment(),CustomAdapter.OnItemClickListener {
         Toast.makeText(requireContext(), "item $clickedItem clicked", Toast.LENGTH_SHORT).show()
         //*
         val intent = Intent(getActivity(), DetailActivity::class.java)
-        intent.putExtra("name",clickedItem.getName());
-        val hm = clickedItem.getHM();
-        intent.putExtra("ssize",hm.get("Serving Size").toString())
-        intent.putExtra("calories",hm.get("Calories").toString());
-        intent.putExtra("totalfat",hm.get("Total Fat").toString());
-        intent.putExtra("cholesterol",hm.get("Cholesterol").toString());
-        intent.putExtra("sodium",hm.get("Sodium").toString());
-        intent.putExtra("carbs",hm.get("Total Carbohydrates").toString());
-        intent.putExtra("dfiber",hm.get("Dietary Fibers").toString());
-        intent.putExtra("sugar",hm.get("Total Sugar").toString());
-        intent.putExtra("protein",hm.get("Protein").toString());
+        val fd = clickedItem
+        //val args =  Bundle();
+        //args.putSerializable("NAMELIST", (Serializable)nameValue)
+        intent.putExtra("namelst",fd);
 
         startActivity(intent)
         // this is the onclick listener for each card in the recycler view,
