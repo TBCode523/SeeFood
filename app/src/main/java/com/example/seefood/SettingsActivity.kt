@@ -3,13 +3,11 @@ package com.example.seefood
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
-import android.text.Spannable
-import android.text.SpannableStringBuilder
-import android.text.TextUtils
 import android.text.method.PasswordTransformationMethod
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -21,8 +19,6 @@ import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
 
 
@@ -32,7 +28,9 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var updateName: LinearLayoutCompat
     private lateinit var updateEmail: LinearLayoutCompat
     private lateinit var updatePassword: LinearLayoutCompat
+    private lateinit var logoutBtn: Button
     private lateinit var auth: FirebaseAuth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
@@ -46,8 +44,6 @@ class SettingsActivity : AppCompatActivity() {
         }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-
-        // dynamically update textview in settings activity to actual user data?
 
         // updating the username
         updateName = findViewById(R.id.nameSetting)
@@ -64,11 +60,30 @@ class SettingsActivity : AppCompatActivity() {
 
 
             builder.setPositiveButton("UPDATE") { _, _ ->
-                //retrieve text from Edittext
-                val newName: String = resetName.text.toString()
+                // overriden below in order to keep dialog box active when input is invalid
+            }
 
-                if (newName.length >= 2) {
-                    Toast.makeText(this,"valid new name", Toast.LENGTH_SHORT).show()
+            builder.setNegativeButton("Cancel") { _, _ ->
+                // Toast.makeText(this,"update cancelled", Toast.LENGTH_SHORT).show()
+                // do nothing
+            }
+
+
+            // actual pop up box
+            val nameDialog = builder.create()
+            nameDialog.show()
+
+            val submit = nameDialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            submit.setOnClickListener{
+                val newName = resetName.text.toString()
+
+                if (newName.isEmpty() || newName.length < 2){
+                    Snackbar.make(
+                        (findViewById(R.id.settings_layout)) ,
+                        "Name must be at least 2 characters",
+                        Snackbar.LENGTH_LONG).show()
+                }
+                else {
                     val user = auth.currentUser
                     val profileUpdates = userProfileChangeRequest {
                         displayName = newName
@@ -77,55 +92,25 @@ class SettingsActivity : AppCompatActivity() {
                     user!!.updateProfile(profileUpdates)
                         .addOnCompleteListener { task ->
                             if (task.isSuccessful) {
-                                Log.d(TAG, "User profile updated with new name: $newName")
-                                Toast.makeText(this,"profile successfully updated", Toast.LENGTH_SHORT).show()
+                                //Log.d(TAG, "User profile updated with new name: $newName")
+                                Snackbar.make(
+                                    (findViewById(R.id.settings_layout)) ,
+                                    "Profile successfully updated",
+                                    Snackbar.LENGTH_LONG).show()
+
                                 user.reload()
+                                nameDialog.dismiss()
                             }
                             else {
-                                Log.d(TAG, "User profile NOT updated")
+                                // it must be a database error
+                                Snackbar.make(
+                                    (findViewById(R.id.settings_layout)) ,
+                                    "Error updating username in the database. Try again",
+                                    Snackbar.LENGTH_LONG).show()
                             }
                         }
                 }
-                else {
-                    Snackbar.make(
-                        (findViewById(R.id.settings_layout)) ,
-                        "Name must be at least 2 characters",
-                        Snackbar.LENGTH_LONG).show()
-                }
             }
-
-            builder.setNegativeButton("Cancel") { _, _ ->
-                Toast.makeText(this,"update cancelled", Toast.LENGTH_SHORT).show()
-            }
-
-
-            // actual pop up box
-            val dialog = builder.create()
-
-            // set update name button to un-clickable until user types 2+ chars
-            // implement the TextWatcher callback listener
-            /*
-            resetName.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    TODO("Not yet implemented")
-                }
-
-                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-                }
-
-                override fun afterTextChanged(p0: Editable?) {
-                    if (p0.toString().trim().length >= 2) {
-                        dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = true
-                    }
-                }
-
-            })
-            */
-            dialog.show()
-
-            // disable update button by default
-            // dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
 
         }
 
@@ -152,7 +137,7 @@ class SettingsActivity : AppCompatActivity() {
                 //retrieve current password from edittext in the layout
                 val currPass = confirmPass.text.toString()
 
-                // check if edditext is empty
+                // check if edittext is empty
                 if (currPass.isEmpty()){
                     Toast.makeText(this,
                         "Your current password is required to continue.",
@@ -163,7 +148,7 @@ class SettingsActivity : AppCompatActivity() {
 
                 }
                 else {
-                    // reauthenticateWithCredentials
+                    // re-authenticateWithCredentials
                     val credentials = EmailAuthProvider.getCredential(currEmail, currPass)
                     user?.reauthenticate(credentials)?.addOnCompleteListener{
                         if (it.isSuccessful){
@@ -178,7 +163,7 @@ class SettingsActivity : AppCompatActivity() {
                             emailBuilder.setView(resetEmail)
 
                             emailBuilder.setPositiveButton("UPDATE") { _, _ ->
-                                null
+                                // do nothing
 
                             }
                             emailBuilder.setNegativeButton("CANCEL") { _, _ ->
@@ -245,13 +230,151 @@ class SettingsActivity : AppCompatActivity() {
             val passDialog = passBuilder.create()
             passDialog.show()
         }
+
+        // update password feature
+        // enter password twice before update
+        updatePassword = findViewById(R.id.passwordSetting)
+        updatePassword.setOnClickListener{
+            // create 1st dialog box for authentication
+            val confirmPass = EditText(this)
+            confirmPass.transformationMethod = PasswordTransformationMethod.getInstance()
+
+            val passBuilder = AlertDialog.Builder(this)
+            passBuilder.setTitle("Authentication")
+            passBuilder.setCancelable(true)
+            passBuilder.setMessage("Enter your password again to authenticate your account.")
+            passBuilder.setView(confirmPass)
+
+            passBuilder.setNegativeButton("CANCEL") {_, _ ->
+                // dismiss
+            }
+
+            passBuilder.setPositiveButton("SUBMIT") { _, _ ->
+                val user = FirebaseAuth.getInstance().currentUser
+
+                val currEmail = user?.email.toString()
+                val currPass = confirmPass.text.toString()
+
+                if (currPass.isEmpty()){
+                    Toast.makeText(this,
+                        "Your current password is required to continue.",
+                        Toast.LENGTH_SHORT).show()
+
+                    confirmPass.error = "This field cannot be blank."
+                    confirmPass.requestFocus()
+
+                }
+                else {
+                    val credentials = EmailAuthProvider.getCredential(currEmail, currPass)
+                    user?.reauthenticate(credentials)?.addOnCompleteListener{ task ->
+                        if (task.isSuccessful) {
+                            // 2nd dialog box
+                            val resetPass = EditText(this)
+                            resetPass.transformationMethod = PasswordTransformationMethod.getInstance()
+
+                            val newPassBuilder = AlertDialog.Builder(this)
+                            newPassBuilder.setTitle("Update Password")
+                            newPassBuilder.setCancelable(true)
+                            newPassBuilder.setMessage("Enter your new password. Must be at least 6 characters.")
+                            newPassBuilder.setView(resetPass)
+
+                            newPassBuilder.setPositiveButton("UPDATE") { _, _ ->
+                                // do nothing
+
+                            }
+                            newPassBuilder.setNegativeButton("CANCEL") { _, _ ->
+                                // dismiss
+                            }
+
+                            val newPassDialog = newPassBuilder.create()
+                            newPassDialog.show()
+
+                            // keep dialog active until valid email is provided
+                            val submit = newPassDialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                            submit.setOnClickListener{
+                                val newPass = resetPass.text.toString()
+
+                                // check if edittext is empty
+                                if (newPass.isEmpty() || newPass.length < 6) {
+                                    Toast.makeText(this,
+                                        "Your new password must must have 6 or more characters.",
+                                        Toast.LENGTH_SHORT).show()
+
+                                    resetPass.error = "New password must have 6 or more characters."
+                                    resetPass.requestFocus()
+                                }
+                                // check if new password is the same as old password
+                                else if (newPass == currPass){
+                                    Toast.makeText(this,
+                                        "Your new password must NOT match your current password.",
+                                        Toast.LENGTH_SHORT).show()
+
+                                    resetPass.error = "New password was the same as current password."
+                                    resetPass.requestFocus()
+                                }
+                                // finally update password
+                                else {
+                                    user.updatePassword(newPass).addOnCompleteListener (this) {task ->
+                                        if (task.isSuccessful){
+                                            Toast.makeText(this,
+                                                "Your password was successfully updated.",
+                                                Toast.LENGTH_SHORT).show()
+
+                                            newPassDialog.dismiss()
+                                        }
+                                        else {
+                                            // must be a database error
+                                            Toast.makeText(this,
+                                                "Email update failed.",
+                                                Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+                                }
+
+                            }
+                        }
+                        else {
+                            Toast.makeText(this,
+                                "The password you entered is incorrect. Try again.",
+                                Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            }
+
+            val passDialog = passBuilder.create()
+            passDialog.show()
+        }
+
+        // logout
+        logoutBtn = findViewById(R.id.settings_logout)
+        logoutBtn.setOnClickListener{
+            // create alert dialog to confirm logout
+            builder = AlertDialog.Builder(this)
+
+            builder.setTitle("LOGOUT")
+            builder.setMessage("Are you sure you want to log out of this app?")
+            builder.setCancelable(true)
+            builder.setPositiveButton("Yes") {
+                    _, _ ->
+                Toast.makeText(this,"Logout successful", Toast.LENGTH_SHORT).show()
+                // log out and return to auth activity
+                FirebaseAuth.getInstance().signOut()
+                startActivity(Intent(this, AuthActivity::class.java))
+            }
+
+            builder.setNegativeButton("No") {
+                    _, _ ->
+                // Toast.makeText(this,"user remain logged in", Toast.LENGTH_SHORT).show()
+
+            }
+
+            builder.show()
+        }
+
     }
 
-    // TODO: before work
-    // updating password
-    // check that new password != currPass
-    // new password length >= 6
-    // enter password twice before update
+
 
 
     // logout menu inside of settings
@@ -262,32 +385,6 @@ class SettingsActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
-            R.id.logout_btn ->{
-                Log.i(TAG, "user wants to log out")
-
-                // create alert dialog to confirm logout
-                builder = AlertDialog.Builder(this)
-
-                builder.setTitle("LOGOUT")
-                builder.setMessage("Are you sure you want to log out of this app?")
-                builder.setCancelable(true)
-                builder.setPositiveButton("Yes") {
-                        _, _ ->
-                    Toast.makeText(this,"logging out user", Toast.LENGTH_SHORT).show()
-                    // log out and return to main activity
-                    FirebaseAuth.getInstance().signOut()
-                    startActivity(Intent(this, AuthActivity::class.java))
-                }
-
-                builder.setNegativeButton("No") {
-                    _, _ ->
-                        Toast.makeText(this,"user remain logged in", Toast.LENGTH_SHORT).show()
-
-                }
-
-                builder.show()
-            }
-
             R.id.delete_user_btn -> {
                 Log.d(TAG, "user initiated request to delete Account")
 
