@@ -42,7 +42,7 @@ class DetailActivity : AppCompatActivity() {
         val fd = intent.extras!!.get("namelst") as Food
         Log.d("Saving", "New foodLst: $fd")
         namelst = mutableListOf()
-        for ((key,value ) in fd.getHM()){
+        for ((key,value ) in fd.nutrients){
             namelst.add(mutableListOf( key,value.toString()))
         }
 

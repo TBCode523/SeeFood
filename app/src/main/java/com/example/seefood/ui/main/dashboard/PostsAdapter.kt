@@ -59,7 +59,7 @@ class CustomAdapter(private val context: Context,
                                     dialog,_->
 
 
-                                buzz(adapterPosition,posts[adapterPosition].getName())
+                                buzz(adapterPosition,posts[adapterPosition].name)
                                 notifyDataSetChanged()
                                 Toast.makeText(context,"Deleted this Information",Toast.LENGTH_SHORT).show()
                                 dialog.dismiss()
