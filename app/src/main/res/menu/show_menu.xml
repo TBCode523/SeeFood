@@ -7,4 +7,10 @@
         android:icon="@drawable/ic_delete"
         />
 
+    <item
+        android:id="@+id/editentry"
+        android:title="Edit"
+        android:icon="@drawable/ic_edit"
+        />
+
 </menu>

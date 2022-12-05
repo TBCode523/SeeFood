@@ -10,8 +10,8 @@
 
     <TextView
         android:id="@+id/foodNamedetail"
-        android:layout_width="334dp"
-        android:layout_height="41dp"
+        android:layout_width="244dp"
+        android:layout_height="40dp"
         android:layout_marginStart="36dp"
         android:layout_marginTop="16dp"
         android:text="foodNamedetail"

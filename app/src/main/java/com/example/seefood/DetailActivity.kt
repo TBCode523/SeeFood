@@ -14,6 +14,9 @@ class DetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
 
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+
         val bundle : Bundle? = intent.extras
 
         val fname: TextView = findViewById(R.id.foodNamedetail)
@@ -94,5 +97,10 @@ class DetailActivity : AppCompatActivity() {
 
 
 
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return super.onSupportNavigateUp()
     }
 }
