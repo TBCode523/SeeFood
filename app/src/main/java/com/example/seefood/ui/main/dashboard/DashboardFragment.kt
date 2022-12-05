@@ -187,7 +187,7 @@ class DashboardFragment : Fragment(),CustomAdapter.OnItemClickListener {
                 dialog.dismiss()
             }
 
-            val nutrients = getNutrients()
+            val nutrients = getNutrients(v)
 
             //*
             val newFood = Food(
@@ -233,71 +233,70 @@ class DashboardFragment : Fragment(),CustomAdapter.OnItemClickListener {
     }
 
 
-    private fun getNutrients():HashMap<String,Float>{
+    private fun getNutrients(view:View):HashMap<String,Float> {
         val inflter = LayoutInflater.from(requireContext())
-        val v = inflter.inflate(R.layout.add_item,null)
-        val addCalories = v.findViewById<EditText>(R.id.add_calories)
-        val addTotalFat = v.findViewById<EditText>(R.id.add_totFat)
-        val addCholesterol = v.findViewById<EditText>(R.id.add_cholesterol)
-        val addSodium = v.findViewById<EditText>(R.id.add_sodium)
-        val addCarbs = v.findViewById<EditText>(R.id.add_carbs)
-        val addDietaryFiber = v.findViewById<EditText>(R.id.add_dFiber)
-        val addSugar = v.findViewById<EditText>(R.id.add_sugar)
-        val addProtein = v.findViewById<EditText>(R.id.add_protein)
-        val addServingSize =v.findViewById<EditText>(R.id.add_ServingSize)
+        val addCalories = view.findViewById<EditText>(R.id.add_calories)
+        val addTotalFat = view.findViewById<EditText>(R.id.add_totFat)
+        val addCholesterol = view.findViewById<EditText>(R.id.add_cholesterol)
+        val addSodium = view.findViewById<EditText>(R.id.add_sodium)
+        val addCarbs = view.findViewById<EditText>(R.id.add_carbs)
+        val addDietaryFiber = view.findViewById<EditText>(R.id.add_dFiber)
+        val addSugar = view.findViewById<EditText>(R.id.add_sugar)
+        val addProtein = view.findViewById<EditText>(R.id.add_protein)
+        val addServingSize = view.findViewById<EditText>(R.id.add_ServingSize)
 
         val nutrients: HashMap<String, Float> = HashMap<String, Float>();
-        if(addServingSize.text.isEmpty()|| !addServingSize.text.isDigitsOnly()) {
+        if (addServingSize.text.isEmpty() || !addServingSize.text.isDigitsOnly()) {
             nutrients["Serving Size"] = 0F;
-        }else if (addCalories.text.isDigitsOnly()){
+        } else if (addCalories.text.isDigitsOnly()) {
             nutrients["Serving Size"] = addCalories.text.toString().toFloat();
         }
 
 
-        if(addCalories.text.isEmpty()|| !addCalories.text.isDigitsOnly()) {
+        if (addCalories.text.isEmpty() || !addCalories.text.isDigitsOnly()) {
             nutrients["Calories"] = 0F;
-        }else if (addCalories.text.isDigitsOnly()){
+        } else if (addCalories.text.isDigitsOnly()) {
             nutrients["Calories"] = addCalories.text.toString().toFloat();
         }
 
-        if(addTotalFat.text.isEmpty()||!(addTotalFat.text.isDigitsOnly())) {
+        if (addTotalFat.text.isEmpty() || !(addTotalFat.text.isDigitsOnly())) {
             nutrients["Total Fat"] = 0F;
-        }else{
+        } else {
             nutrients["Total Fat"] = addTotalFat.text.toString().toFloat();
         }
 
-        if(addCholesterol.text.isEmpty()||!(addCholesterol.text.isDigitsOnly())) {
+        if (addCholesterol.text.isEmpty() || !(addCholesterol.text.isDigitsOnly())) {
             nutrients["Cholesterol"] = 0F;
-        }else{
+        } else {
             nutrients["Cholesterol"] = addCholesterol.text.toString().toFloat();
         }
 
-        if(addSodium.text.isEmpty()||!(addSodium.text.isDigitsOnly())) {
+        if (addSodium.text.isEmpty() || !(addSodium.text.isDigitsOnly())) {
             nutrients["Sodium"] = 0F;
-        }else{
+        } else {
             nutrients["Sodium"] = addSodium.text.toString().toFloat();
         }
 
-        if(addCarbs.text.isEmpty()||!(addCarbs.text.isDigitsOnly())) {
+        if (addCarbs.text.isEmpty() || !(addCarbs.text.isDigitsOnly())) {
             nutrients["Total Carbohydrates"] = 0F;
-        }else{
+        } else {
             nutrients["Total Carbohydrates"] = addCarbs.text.toString().toFloat();
         }
 
-        if(addDietaryFiber.text.isEmpty()||!(addDietaryFiber.text.isDigitsOnly())) {
+        if (addDietaryFiber.text.isEmpty() || !(addDietaryFiber.text.isDigitsOnly())) {
             nutrients["Dietary Fibers"] = 0F;
-        }else{
+        } else {
             nutrients["Dietary Fibers"] = addDietaryFiber.text.toString().toFloat();
         }
 
-        if(addSugar.text.isEmpty()||!(addSugar.text.isDigitsOnly())) {
+        if (addSugar.text.isEmpty() || !(addSugar.text.isDigitsOnly())) {
             nutrients["Total Sugar"] = 0F;
-        }else{
+        } else {
             nutrients["Total Sugar"] = addSugar.text.toString().toFloat()
         }
-        if(addProtein.text.isEmpty()||!(addProtein.text.isDigitsOnly())) {
+        if (addProtein.text.isEmpty() || !(addProtein.text.isDigitsOnly())) {
             nutrients["Protein"] = 0F;
-        }else{
+        } else {
             nutrients["Protein"] = addProtein.text.toString().toFloat()
         }
         return nutrients
