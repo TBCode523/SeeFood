@@ -18,11 +18,6 @@ import com.example.seefood.DetailActivity
 import com.example.seefood.R
 import com.example.seefood.databinding.FragmentDashboardBinding
 import com.example.seefood.utils.Food
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.ktx.Firebase
 
 private  const val TAG = "dashAct"
 class DashboardFragment : Fragment(),CustomAdapter.OnItemClickListener {
@@ -30,8 +25,6 @@ class DashboardFragment : Fragment(),CustomAdapter.OnItemClickListener {
     private  var _binding: FragmentDashboardBinding? = null
     private lateinit var adapter: CustomAdapter
     var counter = 0
-    private lateinit var auth: FirebaseAuth
-    private lateinit var dbRef: DatabaseReference
 
 
 
@@ -51,9 +44,6 @@ class DashboardFragment : Fragment(),CustomAdapter.OnItemClickListener {
         dashboardViewModel =
             ViewModelProvider(this).get(DashboardViewModel::class.java)
 
-        auth = Firebase.auth
-        val uid = auth.uid!!
-        dbRef = FirebaseDatabase.getInstance().reference.child("Users").child(uid)
 
 
         _binding = FragmentDashboardBinding.inflate(inflater, container, false)
@@ -186,10 +176,6 @@ class DashboardFragment : Fragment(),CustomAdapter.OnItemClickListener {
         }
         addDialog.create()
         addDialog.show()
-    }
-
-    fun syncLivedata(){
-
     }
 
     override fun onItemClick(position: Int) {

@@ -21,6 +21,8 @@ import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
 
 
@@ -30,11 +32,11 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var updateName: LinearLayoutCompat
     private lateinit var updateEmail: LinearLayoutCompat
     private lateinit var updatePassword: LinearLayoutCompat
-
+    private lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-
+        auth = Firebase.auth
 
         if (savedInstanceState == null) {
             supportFragmentManager
@@ -67,8 +69,7 @@ class SettingsActivity : AppCompatActivity() {
 
                 if (newName.length >= 2) {
                     Toast.makeText(this,"valid new name", Toast.LENGTH_SHORT).show()
-                    val user = FirebaseAuth.getInstance().currentUser
-
+                    val user = auth.currentUser
                     val profileUpdates = userProfileChangeRequest {
                         displayName = newName
                     }

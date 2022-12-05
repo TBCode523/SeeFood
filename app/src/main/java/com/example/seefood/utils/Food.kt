@@ -1,8 +1,8 @@
 package com.example.seefood.utils
 
-import android.graphics.Bitmap
+import java.io.ByteArrayOutputStream
 
-data class Food(val name:String, val ServingSize:String, val calo:String,
+/*data class Food(val name:String, val ServingSize:String, val calo:String,
                 val tfat:String, val choleserol:String, val sod:String,
                 val car:String, val dFib: String, val sug: String, val prot: String
 ){
@@ -21,7 +21,10 @@ data class Food(val name:String, val ServingSize:String, val calo:String,
     fun setImage(im:Bitmap){
         this.image = im;
     }
+}*/
+
+data class Food(val name:String, val nutrients:HashMap<String, Float>){
+    override fun toString(): String {
+        return "name:$name\nnutrients: $nutrients\n"
+    }
 }
-/*
-data class Food(val name:String,val pic: Bitmap, val nutrients:HashMap<String, Float>)
-*/
