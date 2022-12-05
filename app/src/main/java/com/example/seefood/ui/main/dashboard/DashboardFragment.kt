@@ -236,10 +236,10 @@ class DashboardFragment : Fragment(),CustomAdapter.OnItemClickListener {
             }
 
             //*
-                val newFood = Food(
-                    addName.text.toString(),
-                    hm
-                );
+            val newFood = Food(
+                addName.text.toString(),
+                hm
+            );
             var foodLst = ArrayList<Food>()
             dbRef.get().addOnCompleteListener { it ->
                 Log.d("Saving", "Data: ${it.result.value}")
@@ -252,16 +252,16 @@ class DashboardFragment : Fragment(),CustomAdapter.OnItemClickListener {
                 Log.d("Saving", "New foodLst: $foodLst")
                 dbRef.setValue(foodLst)
             }
-                addItem(newFood)
-                // add other things that will be saved
-                adapter.notifyItemInserted(item.size - 1);
-                Toast.makeText(
-                    requireContext(),
-                    "Adding User Information Success",
-                    Toast.LENGTH_SHORT
-                ).show()
-                dialog.dismiss()
-                //*/
+            addItem(newFood)
+            // add other things that will be saved
+            adapter.notifyItemInserted(item.size - 1);
+            Toast.makeText(
+                requireContext(),
+                "Adding User Information Success",
+                Toast.LENGTH_SHORT
+            ).show()
+            dialog.dismiss()
+            //*/
         }
         addDialog.setNegativeButton("Cancel"){
                 dialog,_->
@@ -295,7 +295,7 @@ class DashboardFragment : Fragment(),CustomAdapter.OnItemClickListener {
         // we will need to go to whatever activity or fragment will be used to display the data
         // with the firebase information
 
-         //*/
+        //*/
     }
 
 
