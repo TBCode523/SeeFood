@@ -141,13 +141,12 @@ class RegisterFragment : Fragment() {
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     Log.i(TAG, "createUserWithEmail:success")
-                    val user = auth.currentUser
                     val emptyLst = ArrayList<Food>()
                     val newData = User(userTxt.text.toString(),emptyLst)
                     userProfileChangeRequest {
                         displayName = userTxt.text.toString()
                     }
-                    dbRef.child("User").child(auth.uid!!).setValue(newData)
+                    dbRef.child(auth.uid!!).setValue(newData)
                     registrationDialog()
 
                 } else {
