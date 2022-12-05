@@ -18,6 +18,7 @@ import com.example.seefood.DetailActivity
 import com.example.seefood.R
 import com.example.seefood.databinding.FragmentDashboardBinding
 import com.example.seefood.utils.Food
+import java.io.ByteArrayOutputStream
 
 private  const val TAG = "dashAct"
 class DashboardFragment : Fragment(),CustomAdapter.OnItemClickListener {
@@ -143,7 +144,7 @@ class DashboardFragment : Fragment(),CustomAdapter.OnItemClickListener {
 
                 val newFood = Food(
                     addName.text.toString(),
-                    addServingSize.text.toString(),
+                    /*addServingSize.text.toString(),
                     addCalories.text.toString(),
                     addTotalFat.text.toString(),
                     addCholesterol.text.toString(),
@@ -151,8 +152,9 @@ class DashboardFragment : Fragment(),CustomAdapter.OnItemClickListener {
                     addCarbs.text.toString(),
                     addDietaryFiber.text.toString(),
                     addSugar.text.toString(),
-                    addProtein.text.toString()
-                );
+                    addProtein.text.toString()*/
+                    HashMap()
+                )
 
                 addItem(newFood)
                 // add other things that will be saved
@@ -183,8 +185,8 @@ class DashboardFragment : Fragment(),CustomAdapter.OnItemClickListener {
         Toast.makeText(requireContext(), "item $clickedItem clicked", Toast.LENGTH_SHORT).show()
 
         val intent = Intent(getActivity(), DetailActivity::class.java)
-        intent.putExtra("name",clickedItem.foodName);
-        intent.putExtra("ssize",clickedItem.ServingSize)
+        intent.putExtra("name",clickedItem.name);
+        /*intent.putExtra("ssize",clickedItem.ServingSize)
         intent.putExtra("calories",clickedItem.cal.toString());
         intent.putExtra("totalfat",clickedItem.totalfat.toString());
         intent.putExtra("cholesterol",clickedItem.cholesterol.toString());
@@ -193,7 +195,7 @@ class DashboardFragment : Fragment(),CustomAdapter.OnItemClickListener {
         intent.putExtra("dfiber",clickedItem.dFiber.toString());
         intent.putExtra("sugar",clickedItem.sugar.toString());
         intent.putExtra("protein",clickedItem.protein.toString());
-
+        */
         startActivity(intent)
         // this is the onclick listener for each card in the recycler view,
         // we will need to go to whatever activity or fragment will be used to display the data

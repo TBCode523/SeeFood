@@ -109,7 +109,7 @@ class CustomAdapter(private val context: Context,
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(posts[position].foodName)
+        holder.bind(posts[position].name)
     }
 
     override fun getItemCount()= posts.size

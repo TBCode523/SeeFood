@@ -1,5 +1,6 @@
 package com.example.seefood.ui.main.camera
 
+import android.graphics.*
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,7 +12,21 @@ class CameraViewModel : ViewModel() {
         value = "This is camera Fragment"
     }
     val text: LiveData<String> = _text
-
+    fun toGrayscale(bmpOriginal: Bitmap): Bitmap {
+        val width: Int
+        val height: Int
+        height = bmpOriginal.height
+        width = bmpOriginal.width
+        val bmpGrayscale = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val c = Canvas(bmpGrayscale)
+        val paint = Paint()
+        val cm = ColorMatrix()
+        cm.setSaturation(0f)
+        val f = ColorMatrixColorFilter(cm)
+        paint.colorFilter = f
+        c.drawBitmap(bmpOriginal, 0f, 0f, paint)
+        return bmpGrayscale
+    }
     fun parseText(visionText: Text): HashMap<String, Float>{
         val hashMap =  hashMapOf<String, Float>()
 //        All the pattern matching needed to extract all the necessary dietary info

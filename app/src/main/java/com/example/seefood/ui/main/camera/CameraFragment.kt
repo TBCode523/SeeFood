@@ -16,18 +16,25 @@ import android.widget.ImageView
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.seefood.R
 import com.example.seefood.databinding.FragmentCameraBinding
+import com.example.seefood.utils.Food
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storage
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.Text
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class CameraFragment : Fragment() {
 
@@ -39,6 +46,7 @@ class CameraFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var dbRef: DatabaseReference
     //Added the following instance variables
+    private lateinit var storage: FirebaseStorage
     private lateinit var imageView: ImageView
     private lateinit var currentPhotoPath: String
     private lateinit var photoFile: File
@@ -58,41 +66,29 @@ class CameraFragment : Fragment() {
 
         this.imageView = binding.picture
         Log.d("ONCLICK HANDLER", "BEFORE SETTING HANDLER")
+        Log.d("ONCLICK HANDLER", "BEFORE SETTING HANDLER")
         binding.button.setOnClickListener {
             takePicture()
         }
+        //autoTest()
         return root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         auth = Firebase.auth
-        val uid = auth.uid!!
-        dbRef = FirebaseDatabase.getInstance().reference.child("Users").child(uid)
+        //Reference to a list of Food data objects
+        dbRef = FirebaseDatabase.getInstance().reference.child("Users").child(auth.uid!!).child("foods")
+        storage = Firebase.storage
+        Log.d("CF", "User: ${auth.currentUser?.email} ${auth.uid}")
     }
-    private fun saveNutrition(img:Bitmap){
 
-    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
-    private fun toGrayscale(bmpOriginal: Bitmap): Bitmap {
-        val width: Int
-        val height: Int
-        height = bmpOriginal.height
-        width = bmpOriginal.width
-        val bmpGrayscale = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        val c = Canvas(bmpGrayscale)
-        val paint = Paint()
-        val cm = ColorMatrix()
-        cm.setSaturation(0f)
-        val f = ColorMatrixColorFilter(cm)
-        paint.colorFilter = f
-        c.drawBitmap(bmpOriginal, 0f, 0f, paint)
-        return bmpGrayscale
-    }
+
 
     private fun takePicture(){
         val pictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
@@ -117,11 +113,12 @@ class CameraFragment : Fragment() {
                 val uri = FileProvider.getUriForFile(this.requireContext(), "com.example.seefood.fileprovider", photoFile)
                 imageView.setImageURI(uri)
                 var photo = MediaStore.Images.Media.getBitmap(this.requireActivity().contentResolver, uri)
-                photo = toGrayscale(photo)
+                photo = cameraViewModel.toGrayscale(photo)
                 val input = photo?.let{ InputImage.fromBitmap(it, 0)}
                 val result = input?.let {
                     recognizer.process(it).addOnSuccessListener { visionText ->
-                        onRecognizerSuccess(visionText)
+
+                        onRecognizerSuccess(visionText, photo)
                     }.addOnFailureListener{ e ->
                         Log.d("RECOGNIZER", "FAILED! ${e.localizedMessage}")
                     }
@@ -132,9 +129,53 @@ class CameraFragment : Fragment() {
         }
     }
 
-    private fun onRecognizerSuccess(visionText: Text){
+    private fun onRecognizerSuccess(visionText: Text, photo:Bitmap){
         //Do what needs to get done
         Log.d("RECOGNIZER", "TEXT: ${visionText.text}\n")
-        Log.d("RESULT", "Map: ${cameraViewModel.parseText(visionText)}\n")
+        val nutrients = cameraViewModel.parseText(visionText)
+        Log.d("RESULT", "nutrients: ${nutrients}\n")
+        val name = "Food"
+        val bytes = ByteArrayOutputStream()
+        photo.compress(Bitmap.CompressFormat.PNG,100, bytes)
+        val food = Food(name, nutrients)
+        Log.d("Saving", "Food Recorded $food\n")
+        saveNutrition(food)
+    }
+    private fun saveNutrition(food: Food){
+        var foodLst = ArrayList<Food>()
+        Log.d("Saving", "In saveNutrition")
+        Log.d("Saving", "User: ${auth.currentUser?.email} ${auth.uid}")
+        dbRef.get().addOnCompleteListener { it ->
+
+            Log.d("Saving", "Data: ${it.result.value}")
+            Log.d("Saving", "Children count: ${it.result.childrenCount}")
+            if (it.result.value != null){
+                foodLst = it.result.value as ArrayList<Food>
+                Log.d("Saving", "foodLst not null: $foodLst")
+            }
+
+            foodLst.add(food)
+            Log.d("Saving", "New foodLst: $foodLst")
+            dbRef.setValue(foodLst)
+
+
+        }
+        dbRef.get().addOnCompleteListener {
+            Log.d("Saving", "New Data: ${it.result.value}")
+        }
+
+
+    }
+    private fun autoTest(){
+        val photo = BitmapFactory.decodeResource(resources, R.drawable.grayscale)
+        val input = photo?.let{ InputImage.fromBitmap(it, 0)}
+        val result = input?.let {
+            recognizer.process(it).addOnSuccessListener { visionText ->
+
+                onRecognizerSuccess(visionText, photo)
+            }.addOnFailureListener{ e ->
+                Log.d("RECOGNIZER", "FAILED! ${e.localizedMessage}")
+            }
+        }
     }
 }
