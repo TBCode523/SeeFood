@@ -39,7 +39,8 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Item name"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:minHeight="48dp" />
 
         <EditText
             android:id="@+id/add_ServingSize"
@@ -47,7 +48,8 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Serving Size"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:minHeight="48dp" />
 
         <EditText
             android:id="@+id/add_calories"
@@ -55,7 +57,8 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Calories"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:minHeight="48dp" />
 
         <EditText
             android:id="@+id/add_totFat"
@@ -63,7 +66,8 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Total Fat"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:minHeight="48dp" />
 
         <EditText
             android:id="@+id/add_cholesterol"
@@ -71,7 +75,8 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Cholesterol"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:minHeight="48dp" />
 
         <EditText
             android:id="@+id/add_sodium"
@@ -79,7 +84,8 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Sodium"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:minHeight="48dp" />
 
         <EditText
             android:id="@+id/add_carbs"
@@ -87,7 +93,8 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Total Carbohydrate"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:minHeight="48dp" />
 
         <EditText
             android:id="@+id/add_dFiber"
@@ -95,7 +102,8 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Dietary Fiber"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:minHeight="48dp" />
 
         <EditText
             android:id="@+id/add_sugar"
@@ -103,7 +111,8 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Sugar"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:minHeight="48dp" />
 
         <EditText
             android:id="@+id/add_protein"
@@ -111,7 +120,8 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Protein"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:minHeight="48dp" />
 
     </LinearLayout>
 

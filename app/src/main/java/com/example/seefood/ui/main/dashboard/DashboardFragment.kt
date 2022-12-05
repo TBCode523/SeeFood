@@ -68,35 +68,40 @@ class DashboardFragment : Fragment(),CustomAdapter.OnItemClickListener {
         recyclerview.adapter = adapter
         recyclerview.layoutManager = LinearLayoutManager(requireContext())
 
-        /*foodRef.addValueEventListener(object: ValueEventListener{
+        foodRef.addValueEventListener(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()){
                     item.clear()
                     for (userSnapshot in snapshot.children){
+                        //userSnapshot.getRef().removeValue();
 
 
 
-                        val foodhm = userSnapshot.child("nutrients").value as HashMap<String, Float>
-                        val foodnm = userSnapshot.child("name").value as String
 
-                        Log.i("retrieve data", foodnm)
-                        Log.i("retrieve data", foodhm.toString())
+                        if (userSnapshot.child("nutrients").value!= null){
+                            val foodhm = userSnapshot.child("nutrients").value as HashMap<String, Float>
+                            val foodnm = userSnapshot.child("name").value as String
 
-                        val hm = HashMap<String, Float>()
-                        for ((key,value)in foodhm){
-                            hm[key] = value.toString().toFloat()
-                        }
-                        val temp = Food(foodnm,hm)
-                        var flag = true
-                        for (valu in item){
-                            if (valu.getHM() == hm && valu.getName() == foodnm){
-                                flag = false
+                            Log.i("retrieve data", foodnm)
+                            Log.i("retrieve data", foodhm.toString())
+
+                            val hm = HashMap<String, Float>()
+                            for ((key,value)in foodhm){
+                                hm[key] = value.toString().toFloat()
+                            }
+                            val temp = Food(foodnm,hm)
+                            var flag = true
+                            for (valu in item){
+                                if (valu.nutrients == hm && valu.name== foodnm){
+                                    flag = false
+                                }
+                            }
+                            Log.i("retrieve item", item.toString())
+                            if (flag) {
+                                item.add(temp);
                             }
                         }
-                        Log.i("retrieve item", item.toString())
-                        if (flag) {
-                            item.add(temp);
-                        }
+
                     }
                     adapter.notifyDataSetChanged()
                 }
@@ -106,7 +111,7 @@ class DashboardFragment : Fragment(),CustomAdapter.OnItemClickListener {
                 TODO("Not yet implemented")
             }
 
-        })*/
+        })
 
 
 
@@ -246,57 +251,39 @@ class DashboardFragment : Fragment(),CustomAdapter.OnItemClickListener {
         val addServingSize = view.findViewById<EditText>(R.id.add_ServingSize)
 
         val nutrients: HashMap<String, Float> = HashMap<String, Float>();
-        if (addServingSize.text.isEmpty() || !addServingSize.text.isDigitsOnly()) {
-            nutrients["Serving Size"] = 0F;
-        } else if (addCalories.text.isDigitsOnly()) {
+        if (addServingSize.text.isNotEmpty() && addServingSize.text.isDigitsOnly()) {
             nutrients["Serving Size"] = addCalories.text.toString().toFloat();
         }
 
 
-        if (addCalories.text.isEmpty() || !addCalories.text.isDigitsOnly()) {
-            nutrients["Calories"] = 0F;
-        } else if (addCalories.text.isDigitsOnly()) {
+        if (addCalories.text.isNotEmpty() && addCalories.text.isDigitsOnly()) {
             nutrients["Calories"] = addCalories.text.toString().toFloat();
         }
 
-        if (addTotalFat.text.isEmpty() || !(addTotalFat.text.isDigitsOnly())) {
-            nutrients["Total Fat"] = 0F;
-        } else {
+        if (addTotalFat.text.isNotEmpty() && (addTotalFat.text.isDigitsOnly())) {
             nutrients["Total Fat"] = addTotalFat.text.toString().toFloat();
         }
 
-        if (addCholesterol.text.isEmpty() || !(addCholesterol.text.isDigitsOnly())) {
-            nutrients["Cholesterol"] = 0F;
-        } else {
+        if (addCholesterol.text.isNotEmpty() && (addCholesterol.text.isDigitsOnly())) {
             nutrients["Cholesterol"] = addCholesterol.text.toString().toFloat();
         }
 
-        if (addSodium.text.isEmpty() || !(addSodium.text.isDigitsOnly())) {
-            nutrients["Sodium"] = 0F;
-        } else {
+        if (addSodium.text.isNotEmpty() && (addSodium.text.isDigitsOnly())) {
             nutrients["Sodium"] = addSodium.text.toString().toFloat();
         }
 
-        if (addCarbs.text.isEmpty() || !(addCarbs.text.isDigitsOnly())) {
-            nutrients["Total Carbohydrates"] = 0F;
-        } else {
+        if (addCarbs.text.isNotEmpty() && (addCarbs.text.isDigitsOnly())) {
             nutrients["Total Carbohydrates"] = addCarbs.text.toString().toFloat();
         }
 
-        if (addDietaryFiber.text.isEmpty() || !(addDietaryFiber.text.isDigitsOnly())) {
-            nutrients["Dietary Fibers"] = 0F;
-        } else {
+        if (addDietaryFiber.text.isNotEmpty() && (addDietaryFiber.text.isDigitsOnly())) {
             nutrients["Dietary Fibers"] = addDietaryFiber.text.toString().toFloat();
         }
 
-        if (addSugar.text.isEmpty() || !(addSugar.text.isDigitsOnly())) {
-            nutrients["Total Sugar"] = 0F;
-        } else {
+        if (addSugar.text.isNotEmpty() && (addSugar.text.isDigitsOnly())) {
             nutrients["Total Sugar"] = addSugar.text.toString().toFloat()
         }
-        if (addProtein.text.isEmpty() || !(addProtein.text.isDigitsOnly())) {
-            nutrients["Protein"] = 0F;
-        } else {
+        if (addProtein.text.isNotEmpty() && (addProtein.text.isDigitsOnly())) {
             nutrients["Protein"] = addProtein.text.toString().toFloat()
         }
         return nutrients
