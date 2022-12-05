@@ -143,9 +143,13 @@ class RegisterFragment : Fragment() {
                     Log.i(TAG, "createUserWithEmail:success")
                     val emptyLst = ArrayList<Food>()
                     val newData = User(userTxt.text.toString(),emptyLst)
-                    userProfileChangeRequest {
+                    val user = auth.currentUser!!
+
+                    user.updateProfile(userProfileChangeRequest {
                         displayName = userTxt.text.toString()
                     }
+                    )
+                    Log.i(TAG, "displayname: ${auth.currentUser?.displayName}")
                     dbRef.child(auth.uid!!).setValue(newData)
                     registrationDialog()
 

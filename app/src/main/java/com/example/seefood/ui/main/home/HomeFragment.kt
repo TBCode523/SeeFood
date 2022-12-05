@@ -50,7 +50,7 @@ class HomeFragment : Fragment() {
             //textView.text = it
         }
 
-        val displayName = auth.currentUser?.displayName
+        val displayName = auth.currentUser!!.displayName
         Log.d("HF", "displayName: $displayName")
         textView.text = SpannableStringBuilder("Welcome $displayName")
         dbRef.get().addOnCompleteListener {
