@@ -75,29 +75,29 @@ class DashboardFragment : Fragment(),CustomAdapter.OnItemClickListener {
                 if (snapshot.exists()){
                     item.clear()
                     for (userSnapshot in snapshot.children){
+                        Log.i("retrieve data", userSnapshot.child("nutrients").value.toString())
+                        Log.i("retrieve data", userSnapshot.child("name").value.toString())
 
+                        if (userSnapshot.child("nutrients").value != null){
+                            var foodhm = userSnapshot.child("nutrients").value as java.util.HashMap<String, Float>
+                            var foodnm = userSnapshot.child("name").value
 
-
-                        var foodhm = userSnapshot.child("nutrients").value as java.util.HashMap<*, *>
-                        var foodnm = userSnapshot.child("name").value
-
-                        Log.i("retrieve data", foodnm.toString())
-                        Log.i("retrieve data", foodhm.toString())
-
-                        var hm = HashMap<String, Float>()
-                        for ((key,value)in foodhm){
-                            hm.put(key.toString(),value.toString().toFloat())
-                        }
-                        var temp = Food(foodnm.toString(),hm)
-                        var flag = true
-                        for (valu in item){
-                            if (valu.getHM().equals(hm) && valu.getName().equals(foodnm.toString())){
-                                flag = false
+                            var hm = HashMap<String, Float>()
+                            for ((key,value)in foodhm){
+                                hm.put(key.toString(),value.toString().toFloat())
                             }
-                        }
-                        Log.i("retrieve item", item.toString())
-                        if (flag) {
-                            item.add(temp);
+
+                            var temp = Food(foodnm.toString(),hm)
+                            var flag = true
+                            for (valu in item){
+                                if (valu.getHM().equals(hm) && valu.getName().equals(foodnm.toString())){
+                                    flag = false
+                                }
+                            }
+                            Log.i("retrieve item", item.toString())
+                            if (flag) {
+                                item.add(temp);
+                            }
                         }
                     }
                     adapter.notifyDataSetChanged()
@@ -158,6 +158,8 @@ class DashboardFragment : Fragment(),CustomAdapter.OnItemClickListener {
         val inflter = LayoutInflater.from(requireContext())
         val v = inflter.inflate(R.layout.add_item,null)
 
+        var flag = false;
+
         val addName = v.findViewById<EditText>(R.id.add_name)
         val addCalories = v.findViewById<EditText>(R.id.add_calories)
         val addTotalFat = v.findViewById<EditText>(R.id.add_totFat)
@@ -182,58 +184,51 @@ class DashboardFragment : Fragment(),CustomAdapter.OnItemClickListener {
                 dialog.dismiss()
             }
 
-            if(addServingSize.text.isEmpty()|| !addServingSize.text.isDigitsOnly()) {
-                hm.set("Serving Size",0F);
-            }else if (addCalories.text.isDigitsOnly()){
+            if(!addServingSize.text.isEmpty()|| addServingSize.text.isDigitsOnly()) {
                 hm.set("Serving Size",addCalories.text.toString().toFloat());
+                flag = true;
             }
 
 
-            if(addCalories.text.isEmpty()|| !addCalories.text.isDigitsOnly()) {
-                hm.set("Calories",0F);
-            }else if (addCalories.text.isDigitsOnly()){
+            if(!addCalories.text.isEmpty()|| !addCalories.text.isDigitsOnly()) {
                 hm.set("Calories",addCalories.text.toString().toFloat());
+                flag = true;
             }
 
-            if(addTotalFat.text.isEmpty()||!(addTotalFat.text.isDigitsOnly())) {
-                hm.set("Total Fat",0F);
-            }else{
+            if(!addTotalFat.text.isEmpty()||!(addTotalFat.text.isDigitsOnly())) {
                 hm.set("Total Fat",addTotalFat.text.toString().toFloat());
+                flag = true;
             }
 
-            if(addCholesterol.text.isEmpty()||!(addCholesterol.text.isDigitsOnly())) {
-                hm.set("Cholesterol",0F);
-            }else{
+            if(!addCholesterol.text.isEmpty()||!(addCholesterol.text.isDigitsOnly())) {
+
                 hm.set("Cholesterol",addCholesterol.text.toString().toFloat());
+                flag = true;
             }
 
-            if(addSodium.text.isEmpty()||!(addSodium.text.isDigitsOnly())) {
-                hm.set("Sodium",0F);
-            }else{
+            if(!addSodium.text.isEmpty()||!(addSodium.text.isDigitsOnly())) {
                 hm.set("Sodium",addSodium.text.toString().toFloat());
+                flag = true;
             }
 
-            if(addCarbs.text.isEmpty()||!(addCarbs.text.isDigitsOnly())) {
-                hm.set("Total Carbohydrates",0F);
-            }else{
+            if(!addCarbs.text.isEmpty()||!(addCarbs.text.isDigitsOnly())) {
+
                 hm.set("Total Carbohydrates",addCarbs.text.toString().toFloat());
+                flag = true;
             }
 
-            if(addDietaryFiber.text.isEmpty()||!(addDietaryFiber.text.isDigitsOnly())) {
-                hm.set("Dietary Fibers",0F);
-            }else{
+            if(!addDietaryFiber.text.isEmpty()||!(addDietaryFiber.text.isDigitsOnly())) {
                 hm.set("Dietary Fibers",addDietaryFiber.text.toString().toFloat());
+                flag = true;
             }
 
-            if(addSugar.text.isEmpty()||!(addSugar.text.isDigitsOnly())) {
-                hm.set("Total Sugar",0F);
-            }else{
+            if(!addSugar.text.isEmpty()||!(addSugar.text.isDigitsOnly())) {
                 hm.set("Total Sugar",addSugar.text.toString().toFloat())
+                flag = true;
             }
-            if(addProtein.text.isEmpty()||!(addProtein.text.isDigitsOnly())) {
-                hm.set("Protein",0F);
-            }else{
+            if(!addProtein.text.isEmpty()||!(addProtein.text.isDigitsOnly())) {
                 hm.set("Protein",addProtein.text.toString().toFloat())
+                flag = true;
             }
 
             //*

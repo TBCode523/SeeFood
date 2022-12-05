@@ -21,7 +21,7 @@ package com.example.seefood.utils
     }
 }*/
 
-data class Food(val name:String, val nutrients:HashMap<String, Float>):java.io.Serializable{
+data class Food(var name:String, val nutrients:HashMap<String, Float>):java.io.Serializable{
     override fun toString(): String {
         return "name:$name\nnutrients: $nutrients\n"
     }
@@ -33,6 +33,12 @@ data class Food(val name:String, val nutrients:HashMap<String, Float>):java.io.S
     fun getName():String{
         return name;
     }
+    @JvmName("setName1")
+    fun setName(nName:String){
+        name = nName
+    }
+
+
     fun getHM():HashMap<String, Float>{
         return nutrients
     }

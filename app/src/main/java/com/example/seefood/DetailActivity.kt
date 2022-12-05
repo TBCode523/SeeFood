@@ -1,8 +1,15 @@
 package com.example.seefood
 
+import android.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
+import android.widget.Toast
+import androidx.core.text.isDigitsOnly
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seefood.utils.Food
@@ -33,17 +40,20 @@ class DetailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_detail)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        val bundle : Bundle? = intent.extras
+        val bundle: Bundle? = intent.extras
 
         //for ((key, value) in map) {
-            //println("$key = $value")
+        //println("$key = $value")
         //}
+        val foodnam = findViewById(R.id.foodNamedetail) as TextView
+
 
         val fd = intent.extras!!.get("namelst") as Food
-        Log.d("Saving", "New foodLst: $fd")
+        foodnam.text = fd.getName()
+            Log.d("Saving", "New foodLst: $fd")
         namelst = mutableListOf()
-        for ((key,value ) in fd.getHM()){
-            namelst.add(mutableListOf( key,value.toString()))
+        for ((key, value) in fd.getHM()) {
+            namelst.add(mutableListOf(key, value.toString()))
         }
 
         newRecyclerView = findViewById(R.id.detail_recycler)
@@ -51,6 +61,9 @@ class DetailActivity : AppCompatActivity() {
         newRecyclerView.setHasFixedSize(true)
         newRecyclerView.adapter = detailAdapter(namelst);
     }
+
+
+
 
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
