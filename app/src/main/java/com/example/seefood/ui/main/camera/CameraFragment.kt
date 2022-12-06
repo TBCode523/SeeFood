@@ -146,7 +146,7 @@ class CameraFragment : Fragment() {
         Log.d("Saving", "Food Recorded $food\n")
 
         setName(food)
-        saveNutrition(food)
+        //saveNutrition(food)
 
 
 

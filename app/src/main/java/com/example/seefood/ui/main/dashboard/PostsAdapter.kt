@@ -33,15 +33,16 @@ class CustomAdapter(private val context: Context,
         val tv: TextView
         init {
             tv = itemView.findViewById(R.id.itemName)
+            /*
             mMen = view.findViewById(R.id.mMenus)
             mMen.setOnClickListener{
                 popupMenus(it)
-            }
+            }*/
 
             itemView.setOnClickListener(this)
         }
 
-        private fun popupMenus(v:View) {
+        /*private fun popupMenus(v:View) {
             val position = posts[adapterPosition]
 
 
@@ -80,7 +81,7 @@ class CustomAdapter(private val context: Context,
             menu.javaClass.getDeclaredMethod("setForceShowIcon",Boolean::class.java)
                 .invoke(menu,true)
 
-        }
+        }*/
 
         // this is the onclick listener that will tell the app what to do when clicked
         // we will need to extract info through firebase either through an id or a name

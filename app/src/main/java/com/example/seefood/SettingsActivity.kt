@@ -386,6 +386,8 @@ class SettingsActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.delete_user_btn -> {
+                //Toast.makeText(this, "CLICKED DELETE USER", Toast.LENGTH_SHORT).show()
+
                 Log.d(TAG, "user initiated request to delete Account")
 
                 builder = AlertDialog.Builder(this)
@@ -401,6 +403,7 @@ class SettingsActivity : AppCompatActivity() {
                         .addOnCompleteListener { task ->
                             if (task.isSuccessful) {
                                 Log.d(TAG, "User account deleted.")
+                                Toast.makeText(this,"Your account has been deleted.", Toast.LENGTH_SHORT).show()
                             }
                         }
 
@@ -410,9 +413,11 @@ class SettingsActivity : AppCompatActivity() {
                 }
 
                 builder.setNegativeButton("No") { _,_ ->
-                    Toast.makeText(this,"user account remains active", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(this,"user account remains active", Toast.LENGTH_SHORT).show()
                     // do nothing
                 }
+
+                builder.show()
             }
         }
         return super.onOptionsItemSelected(item)

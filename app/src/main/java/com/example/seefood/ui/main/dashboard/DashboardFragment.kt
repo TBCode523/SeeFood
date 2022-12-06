@@ -115,7 +115,7 @@ class DashboardFragment : Fragment(),CustomAdapter.OnItemClickListener {
             addItemtoRec()
         }
 
-        fdelete(0,"Food")
+        //fdelete(0,"Food")
         return root
     }
 
