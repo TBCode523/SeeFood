@@ -4,4 +4,5 @@ data class Food(var name:String, val nutrients:HashMap<String, Float>):java.io.S
     override fun toString(): String {
         return "name:$name\nnutrients: $nutrients\n"
     }
+
 }
