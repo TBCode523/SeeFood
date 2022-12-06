@@ -21,7 +21,6 @@ import com.google.firebase.ktx.Firebase
 
 class HomeFragment : Fragment() {
 
-    private final val TAG = "HomeFragment"
     private var _binding: FragmentHomeBinding? = null
 
     // This property is only valid between onCreateView and
@@ -46,36 +45,22 @@ class HomeFragment : Fragment() {
         val root: View = binding.root
         pieChart = binding.pieChart
 
-        val textView: TextView = binding.welcomeText
+        val textView: TextView = binding.textHome
         homeViewModel.text.observe(viewLifecycleOwner) {
             //textView.text = it
         }
 
         val displayName = auth.currentUser!!.displayName
         Log.d("HF", "displayName: $displayName")
-        textView.text = SpannableStringBuilder("Welcome")
+        textView.text = SpannableStringBuilder("Welcome $displayName")
         dbRef.get().addOnCompleteListener {
             if(it.result.value != null){
-                var dbList = it.result.value as List<HashMap<String,*>>
-                //dbList = dbList.filter.
-                 dbList = dbList.filterNotNull()
-                val foodLst = ArrayList<Food>()
-
-                Log.i(TAG,"RAW DATA --> $dbList")
-
-                for (i in dbList){
-                   //Log.d(TAG,i.get("nutrients")as HashMap<String,Float>)
-                    val food = Food(i.get("name") as String,
-                        i.get("nutrients") as HashMap<String,Float>)
-                    foodLst.add(food)
-                }
-
-
-                sumNutrients = homeViewModel.getSum(foodLst)
+                val foodLst = it.result.value as List<Food>
+                /*sumNutrients = homeViewModel.getSum(foodLst)
                 avgNutrients = homeViewModel.getAverages(sumNutrients, foodLst.size)
                 GRAPH_GENERATOR.generatePieGraph(pieChart, avgNutrients)
 
-
+                 */
             }
         }
         return root
@@ -87,6 +72,3 @@ class HomeFragment : Fragment() {
     }
 
 }
-
-
-
