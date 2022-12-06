@@ -250,7 +250,7 @@ class DashboardFragment : Fragment(),CustomAdapter.OnItemClickListener {
 
         val nutrients: HashMap<String, Float> = HashMap<String, Float>();
         if (addServingSize.text.isNotEmpty() && addServingSize.text.isDigitsOnly()) {
-            nutrients["Serving Size"] = addCalories.text.toString().toFloat();
+            nutrients["Serving Size"] = addServingSize.text.toString().toFloat();
         }
 
 
