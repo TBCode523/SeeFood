@@ -48,9 +48,6 @@ class DashboardFragment : Fragment(),CustomAdapter.OnItemClickListener {
         //Reference to a list of Food data objects
         foodRef = FirebaseDatabase.getInstance().reference.child("Users").child(auth.uid!!).child("foods")
 
-
-
-
         dashboardViewModel =
             ViewModelProvider(this)[DashboardViewModel::class.java]
 

@@ -55,6 +55,7 @@ class CameraFragment : Fragment() {
     private lateinit var photoFile: File
     private lateinit var cameraViewModel:CameraViewModel
     private val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+    private  var nName = "sample"
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -125,6 +126,7 @@ class CameraFragment : Fragment() {
                         Log.d("RECOGNIZER", "FAILED! ${e.localizedMessage}")
                     }
                 }
+
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data)
@@ -141,8 +143,38 @@ class CameraFragment : Fragment() {
         photo.compress(Bitmap.CompressFormat.PNG,100, bytes)
         val food = Food(name, nutrients)
         Log.d("Saving", "Food Recorded $food\n")
+
+        setName(food)
+
+
+
+    }
+
+    private fun setName(food:Food){
+        val builder = AlertDialog.Builder(requireContext())
+        val inflater = layoutInflater
+        val dialogLayout = inflater.inflate(R.layout.edit_name_layout, null)
+        val editText = dialogLayout.findViewById<EditText>(R.id.editNameCam)
+
+        with(builder){
+            setTitle("Enter the food name!")
+            setPositiveButton("Ok"){dialog,which->
+                nName = editText.text.toString()
+
+            }
+            setNegativeButton("Cancel"){dialog,which->
+
+            }
+            setView(dialogLayout)
+            show()
+        }
+        food.name = nName
+
+
         saveNutrition(food)
     }
+
+
     private fun saveNutrition(food: Food){
         var foodLst = ArrayList<Food>()
         Log.d("Saving", "In saveNutrition")
@@ -166,6 +198,7 @@ class CameraFragment : Fragment() {
         dbRef.get().addOnCompleteListener {
             Log.d("Saving", "New Data: ${it.result.value}")
         }
+
 
 
     }
