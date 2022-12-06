@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.PopupMenu
 import android.widget.PopupWindow
 import android.widget.Toast
@@ -55,7 +56,7 @@ class CameraFragment : Fragment() {
     private lateinit var photoFile: File
     private lateinit var cameraViewModel:CameraViewModel
     private val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
-    private  var nName = "sample"
+    //private var nName =stringOf
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -145,6 +146,7 @@ class CameraFragment : Fragment() {
         Log.d("Saving", "Food Recorded $food\n")
 
         setName(food)
+        saveNutrition(food)
 
 
 
@@ -159,7 +161,8 @@ class CameraFragment : Fragment() {
         with(builder){
             setTitle("Enter the food name!")
             setPositiveButton("Ok"){dialog,which->
-                nName = editText.text.toString()
+                food.name = editText.text.toString()
+                onClicki(food)
 
             }
             setNegativeButton("Cancel"){dialog,which->
@@ -168,9 +171,12 @@ class CameraFragment : Fragment() {
             setView(dialogLayout)
             show()
         }
-        food.name = nName
+        //food.name = nName
 
 
+    }
+
+    private fun onClicki(food:Food){
         saveNutrition(food)
     }
 

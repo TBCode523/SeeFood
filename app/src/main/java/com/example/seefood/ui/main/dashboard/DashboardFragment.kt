@@ -64,16 +64,14 @@ class DashboardFragment : Fragment(),CustomAdapter.OnItemClickListener {
         adapter = CustomAdapter(requireContext(),item,this,::fdelete)
         recyclerview.adapter = adapter
         recyclerview.layoutManager = LinearLayoutManager(requireContext())
-
+        Log.d("in Event listener", "food list: $foodLst")
         foodRef.addValueEventListener(object: ValueEventListener{
+
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()){
                     item.clear()
                     for (userSnapshot in snapshot.children){
                         //userSnapshot.getRef().removeValue();
-
-
-
 
                         if (userSnapshot.child("nutrients").value!= null){
                             val foodhm = userSnapshot.child("nutrients").value as HashMap<String, Float>
@@ -116,8 +114,12 @@ class DashboardFragment : Fragment(),CustomAdapter.OnItemClickListener {
         binding.fab.setOnClickListener{
             addItemtoRec()
         }
+
+        fdelete(0,"Food")
         return root
     }
+
+
 
 
 
@@ -133,7 +135,6 @@ class DashboardFragment : Fragment(),CustomAdapter.OnItemClickListener {
 
     fun fdelete(itm: Int,id:String){
         //dashboardViewModel.delete(itm)
-
         val dbr = FirebaseDatabase.getInstance().reference.child("Users").child(auth.uid!!).child("foods")
         dbr.orderByChild("name").equalTo(id).addListenerForSingleValueEvent(object:ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
