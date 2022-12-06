@@ -52,9 +52,7 @@ class CustomAdapter(private val context: Context,
                 when(it.itemId){
                     R.id.delete -> {
                         AlertDialog.Builder(context)
-                            .setTitle("Delete")
-                            .setIcon(R.drawable.ic_warning)
-                            .setMessage("Are you sure delete this Information")
+                            .setTitle("Enter Food Name")
                             .setPositiveButton("Yes"){
                                     dialog,_->
 
