@@ -3,6 +3,7 @@ package com.example.seefood
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seefood.utils.Food
@@ -40,10 +41,13 @@ class DetailActivity : AppCompatActivity() {
         //}
 
         val fd = intent.extras!!.get("namelst") as Food
+        val n : TextView = findViewById(R.id.foodNamedetail)
+        n.text = fd.name
+
         Log.d("Saving", "New foodLst: $fd")
         namelst = mutableListOf()
         for ((key,value ) in fd.nutrients){
-            namelst.add(mutableListOf( key,value.toString()))
+            namelst.add(mutableListOf( key,value.toString(),fd.name))
         }
 
         newRecyclerView = findViewById(R.id.detail_recycler)

@@ -238,6 +238,7 @@ class DashboardFragment : Fragment(),CustomAdapter.OnItemClickListener {
 
     private fun getNutrients(view:View):HashMap<String,Float> {
         val inflter = LayoutInflater.from(requireContext())
+        val addName = view.findViewById<EditText>(R.id.add_name)
         val addCalories = view.findViewById<EditText>(R.id.add_calories)
         val addTotalFat = view.findViewById<EditText>(R.id.add_totFat)
         val addCholesterol = view.findViewById<EditText>(R.id.add_cholesterol)
@@ -249,6 +250,9 @@ class DashboardFragment : Fragment(),CustomAdapter.OnItemClickListener {
         val addServingSize = view.findViewById<EditText>(R.id.add_ServingSize)
 
         val nutrients: HashMap<String, Float> = HashMap<String, Float>();
+
+
+
         if (addServingSize.text.isNotEmpty() && addServingSize.text.isDigitsOnly()) {
             nutrients["Serving Size"] = addServingSize.text.toString().toFloat();
         }

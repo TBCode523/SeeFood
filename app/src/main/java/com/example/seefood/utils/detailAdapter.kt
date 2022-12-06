@@ -66,6 +66,7 @@ class detailAdapter(private val nutitem: MutableList<MutableList<String>>):
         val pg : ProgressBar = itemView.findViewById(R.id.progressBar)
 
 
+
     }
 
 }
